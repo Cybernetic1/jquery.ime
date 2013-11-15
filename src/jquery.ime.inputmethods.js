@@ -629,7 +629,7 @@
 		},
 		'cn': {
 			autonym: 'Chinese',
-			inputmethods: [ 'cn', 'cn-transliteration' ]
+			inputmethods: [ 'cn' ]
 		},
 		'cv': {
 			autonym: 'Чăвашла',
