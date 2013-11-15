@@ -90,6 +90,10 @@
 			name: 'لاتینی',
 			source: 'rules/ckb/ckb-transliteration-lakbd.js'
 		},
+		'cn-transliteration': {
+			name: '中文',
+			source: 'rules/cn/cn-transliteration.js'
+		},
 		'cv-cyr-altgr': {
 			name: 'Чăвашла (AltGr)',
 			source: 'rules/cv/cv-cyr-altgr.js'
