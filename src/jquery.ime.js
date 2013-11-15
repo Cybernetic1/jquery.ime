@@ -398,8 +398,8 @@
 	$.ime.languages = {};
 
 	var defaultInputMethod = {
-		contextLength: 0,
-		maxKeyLength: 1
+		contextLength: 2,
+		maxKeyLength: 3
 	};
 
 	$.ime.register = function ( inputMethod ) {
