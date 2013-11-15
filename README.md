@@ -1,6 +1,8 @@
 jQuery.IME
 ==========
 
+(This is modified by YKY for the Conkey project...)
+
 jQuery.IME is a jQuery based input method editor library supporting more than
 135 input methods across more than 62 languages.
 
