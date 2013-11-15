@@ -90,7 +90,7 @@
 			name: 'لاتینی',
 			source: 'rules/ckb/ckb-transliteration-lakbd.js'
 		},
-		'cn-transliteration': {
+		'cn': {
 			name: '中文',
 			source: 'rules/cn/cn-transliteration.js'
 		},
@@ -626,6 +626,10 @@
 		'ce': {
 			autonym: 'нохчийн',
 			inputmethods: [ 'cyrl-palochka' ]
+		},
+		'cn': {
+			autonym: 'Chinese',
+			inputmethods: [ 'cn', 'cn-transliteration' ]
 		},
 		'cv': {
 			autonym: 'Чăвашла',
