@@ -1,13 +1,13 @@
 ( function ( $ ) {
 	'use strict';
 
-	var eoX = {
-		id: 'eo-x',
-		name: 'Esperanto x',
-		description: 'writing Esperanto-letters adding x\'s (the X-system).',
-		date: '2013-02-12',
+	var cn = {
+		id: 'cn',
+		name: 'YKY Chinese',
+		description: 'YKY`s testing.',
+		date: '2013-11-15',
 		URL: 'http://github.com/wikimedia/jquery.ime',
-		author: 'Parag Nemade',
+		author: 'YKY',
 		license: 'GPLv3',
 		version: '1.0',
 		patterns: [
@@ -49,5 +49,5 @@
 			['UX', 'Ŭ']]
 	};
 
-	$.ime.register( eoX );
+	$.ime.register( cn );
 }( jQuery ) );
