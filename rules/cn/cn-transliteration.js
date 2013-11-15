@@ -28,14 +28,8 @@
 		license: 'GPLv3',
 		version: '1.0',
 		patterns: [
-			[ 'hh', '嘿嘿嘿' ],
-			[ 'I', 'Ӏ' ],
-			[ 'І', 'Ӏ' ] ],
-		patterns_x: [
-			[ 'hh', '嘿嘿嘿' ],
-			[ 'д', 'Ӏ' ],
-			[ 'ш', 'Ӏ' ],
-			[ 'Ш', 'Ӏ' ] ]
+			[ 'hh', '嘿' ],
+			[ 'І', 'J' ] ]
 	};
 
 	$.ime.register( cnTransliteration );
