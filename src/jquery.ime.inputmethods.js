@@ -91,7 +91,7 @@
 			source: 'rules/ckb/ckb-transliteration-lakbd.js'
 		},
 		'cn': {
-			name: '中文',
+			name: 'YKY中文',
 			source: 'rules/cn/cn-transliteration.js'
 		},
 		'cv-cyr-altgr': {
