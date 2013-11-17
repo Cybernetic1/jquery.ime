@@ -567,6 +567,10 @@
 		'uz-kbd': {
 			name: 'Uzbek kbd',
 			source: 'rules/uz/uz-kbd.js'
+		},
+		'yky': {
+			name: 'YKY shorthands',
+			source: 'rules/yky/yky.js'
 		}
 	} );
 
@@ -902,6 +906,10 @@
 		'uz': {
 			autonym: 'Oʻzbekcha',
 			inputmethods: [ 'uz-kbd' ]
+		},
+		'yky': {
+			autonym: 'YKY shorthands',
+			inputmethods: [ 'yky' ]
 		}
 	} );
 

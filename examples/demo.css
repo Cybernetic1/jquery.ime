@@ -4,18 +4,18 @@ body {
 }
 
 input {
-	width: 500px;
+	width: 700px;
 	margin-bottom: 20px;
 }
 
 textarea {
-	width: 500px;
-	height: 300px;
+	width: 700px;
+	height: 500px;
 	margin-bottom: 20px;
 }
 
 [contenteditable] {
 	border: 1px solid green;
-	height: 300px;
-	width: 500px;
+	height: 500px;
+	width: 700px;
 }
