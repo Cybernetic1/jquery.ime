@@ -1,17 +1,3 @@
-( function ( $ ) {
-	'use strict';
-
-	var cn = {
-		id: 'cn',
-		name: 'YKY Chinese',
-		description: 'YKY`s testing.',
-		date: '2013-11-15',
-		URL: 'http://github.com/Cybernetic1/jquery.ime',
-		author: 'YKY',
-		license: 'GPLv3',
-		version: '1.0',
-		patterns: [
-
 ['a','阿'],
 ['a','啊'],
 ['a','嗄'],
@@ -9915,10 +9901,3 @@
 ['zuo','稓'],
 ['zuo','筰'],
 ['zuo','蓙'],
-['cyb1', '半機器人一號']
-
-		]
-	};
-
-	$.ime.register( cn );
-}( jQuery ) );
