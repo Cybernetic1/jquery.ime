@@ -1,3 +1,9 @@
+var LIVERELOAD_PORT = 35729;
+var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
+var mountFolder = function (connect, dir) {
+  return connect.static(require('path').resolve(dir));
+}
+
 /* jshint node: true */
 module.exports = function ( grunt ) {
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -7,9 +13,49 @@ module.exports = function ( grunt ) {
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('connect-livereload');
+	grunt.loadNpmTasks('grunt-contrib-connect');
+	grunt.loadNpmTasks('grunt-open');
 	// Project configuration.
 	grunt.initConfig( {
 		pkg: grunt.file.readJSON( 'package.json' ),
+		watch: {
+      livereload: {
+        options: {
+          livereload: LIVERELOAD_PORT
+        },
+        files: [
+	        'src/{,*/}*.js',
+          'dicts/{,*/}*.*',
+          'css/{,*/}*.css',
+          'rules/{,*/}*.js',
+          'examples/{,*/}*.js'
+        ]
+      }
+    },
+    connect: {
+      options: {
+        port: 9000,
+        hostname: '0.0.0.0'
+      },
+      livereload: {
+        options: {
+          open: false,
+          middleware: function (connect) {
+            return [
+              lrSnippet,
+              mountFolder(connect, './'),
+            ]
+          }
+        }
+      }
+    },
+    open: {
+      server: {
+        url: 'http://localhost:<%= connect.options.port %>/examples/index.html'
+      }
+    },
 		meta: {
 			banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %>+'
 				+ '<%= grunt.template.today("yyyymmdd") %>\n'
@@ -74,4 +120,11 @@ module.exports = function ( grunt ) {
 	// Default task.
 	grunt.registerTask( 'default', ['jshint', 'qunit', 'concat', 'uglify', 'copy', 'csslint'] );
 	grunt.registerTask( 'test', ['jshint', 'qunit'] );
+	grunt.registerTask( 'server', function (target) {
+    return grunt.task.run([
+      'connect:livereload',
+      'open:server',
+      'watch'
+    ]);
+	});
 };
