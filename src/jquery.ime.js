@@ -398,7 +398,9 @@
 	$.ime.languages = {};
 
 	var defaultInputMethod = {
-		contextLength: 7,
+		// context = for context rules matching
+		contextLength: 10,
+		// key length = letters that will be replaced
 		maxKeyLength: 7
 	};
 
