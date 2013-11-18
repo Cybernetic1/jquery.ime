@@ -10,8 +10,7 @@
 		author: 'YKY',
 		license: 'GPLv3',
 		version: '1.0',
-		patterns: [
-
+		patternsList: [
 ['a ','阿'],
 ['a ','啊'],
 ['a ','嗄'],
@@ -9916,9 +9915,38 @@
 ['zuo ','筰'],
 ['zuo ','蓙'],
 ['cyb1 ','半機器人一號']
+		],
 
-		]
+		// This function is specially for Chinese pinyin matching
+		patterns: function( input, context ) {
+			var i, patternsList = [], rule, replacement,
+					currentLength = 0, result = null;
+
+			patternsList = this.inputmethod.patternsList;
+			
+			// Find the rule of longest match
+			for ( i = 0; i < patternsList.length; i++ ) {
+				rule = patternsList[i];
+
+				if (input.match(rule[0]) && rule[0].length > currentLength) {
+					result = rule;
+					currentLength = rule[0].length;
+				}
+			}
+
+			if (result == null)
+				// No matches, return the input
+				return input;
+
+			// Last item in the rule.
+			// It can also be a function, because the replace
+			// method can have a function as the second argument.
+			replacement = result.slice( -1 )[0];
+
+			// Input string match test
+			return input.replace( result[0], replacement );
+		}
+
 	};
-
 	$.ime.register( cn );
 }( jQuery ) );
