@@ -218,3 +218,15 @@ span.ime-disable-shortcut {
 .imeselector-menu li {
 	position: relative;
 }
+
+.ime-autocomplete {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.ime-autocomplete ul,
+.ime-autocomplete li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
