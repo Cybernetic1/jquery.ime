@@ -1,0 +1,34 @@
+RAW SOURCES:
+
+	* Only pinyin:
+		char-pinyin-freq-raw.txt
+
+	* With tones as number 1-4:
+		char-pinyin2-freq-raw.txt
+
+CLASSIFICATIONS:
+
+	* The .graphml files can be edited by the graph editor yEd
+		classification-consonants.graphml
+		classification-consonants.png
+		classification-nuclei.graphml
+		classification-nuclei.png
+
+LISTS:
+
+	* All possible combinations of sounds
+	* without tone numbers
+		pinyin-sounds-list.txt
+
+	* These are in "trivial graph format"
+	* for use by yEd
+		consonants-list.tgf
+		nuclei-list.tgf
+
+SPECIAL FORMATS:
+
+	* Comma separated list - for OpenOffice Calc
+		char-pinyin.csv
+
+	* As Javascript list structure:
+		char-pinyin.js
