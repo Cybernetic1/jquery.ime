@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Fuzzy pinyin matching</title>
+		<meta name='Generator' content='Zim 0.54'>
+		<style type='text/css'>
+			a          { text-decoration: none      }
+			a:hover    { text-decoration: underline }
+			a:active   { text-decoration: underline }
+			strike     { color: grey                }
+			u          { text-decoration: none;
+			             background-color: yellow   }
+			tt         { color: #2e3436;            }
+			pre        { color: #2e3436;
+			             margin-left: 20px          }
+			h1         { text-decoration: underline;
+			             color: #4e9a06             }
+			h2         { color: #4e9a06             }
+			h3         { color: #4e9a06             }
+			h4         { color: #4e9a06             }
+			h5         { color: #4e9a06             }
+		</style>
+	</head>
+	<body>
+
+<!-- Wiki content -->
+
+<h1>Fuzzy pinyin matching</h1>
+
+<h4>(A)  Fuzzy matching of single characters</h4>
+
+<p>
+Each character <img src="./README.fuzzy-mandarin-pinyin/equation.png" alt="">.<br>
+</p>
+
+<p>
+Misspelled character <img src="./README.fuzzy-mandarin-pinyin/equation001.png" alt="">.<br>
+</p>
+
+<p>
+Distance between each pair:<br>
+<div style='padding-left: 30pt'>
+<img src="./README.fuzzy-mandarin-pinyin/equation002.png" alt=""><br>
+</div>
+and<br>
+<div style='padding-left: 30pt'>
+<img src="./README.fuzzy-mandarin-pinyin/equation003.png" alt=""><br>
+</div>
+where <em>d</em>(·,·) is the distance metric induced by the classification tree (see below).<br>
+</p>
+
+<p>
+Then distance between the 2 characters <em>c, c'</em> = <br>
+<div style='padding-left: 30pt'>
+<img src="./README.fuzzy-mandarin-pinyin/equation005.png" alt=""><br>
+</div>
+or we can use<br>
+<div style='padding-left: 30pt'>
+<img src="./README.fuzzy-mandarin-pinyin/equation006.png" alt=""><br>
+</div>
+to give more weight to the nuclei because people usually have less trouble with consonants.<br>
+</p>
+
+<p>
+Each character <em>c</em> has a "score" <em>s</em>, which is its occurrence frequency.<br>
+</p>
+
+<p>
+So a misspelled character should have a lower score than its original score, perhaps via:<br>
+<div style='padding-left: 30pt'>
+<img src="./README.fuzzy-mandarin-pinyin/equation007.png" alt=""><br>
+</div>
+where <em>β</em> is a parametric constant the user can tweak.  This makes <em>s' = s</em> when the distance <em>d</em> = 0.  If <em>β</em> is big, distant spellings will have low ranking (this is suitable for more experienced users, who usually spell correctly), and if <em>β</em> is small, more misspelled characters will be displayed instead of rare (low-frequency) characters).<br>
+</p>
+
+<p>
+Algorithm:  we can just scan through the entire set of characters (which is on the order of 10K) with everyone mixed together, calculate the distance of each char with our input char, then calculate the new ranking.  Of course the lower ranking ones will be cut off.<br>
+</p>
+
+<h4>Distance between 2 consonants / nuclei</h4>
+
+<p>
+This is the classification tree, based on my estimation of which sounds are close to each other (Of course the reader should feel free to improve it):<br>
+<img src="classification-consonants.png" alt=""><br>
+</p>
+
+<p>
+A similar map has been made for distances between nuclei:<br>
+<img src="classification-nuclei.png" alt=""><br>
+</p>
+
+<p>
+We can assign distances this way:<br>
+</p>
+
+<p>
+Each cluster may have <em>N</em> elements, and <em>e</em> is the average distance from the elements to its centroid (smaller <em>e</em> means a more compact cluster).  A sub-cluster is represented by its centroid as a single element in the parent cluster.<br>
+</p>
+
+<p>
+The distance between 2 leaf elements can be taken to be the <em>e</em> value of their lowest common parent cluster.<br>
+</p>
+
+<p>
+We can normalize the <em>e</em> value at the root to 1 (the biggest average distance).<br>
+</p>
+
+<h4>(B)  Fuzzy matching of multi-character words/phrases</h4>
+
+<p>
+The key here is to deal with the large number of combinatorial variations.  In our algorithm for (A) we calculated the distance between the input char and all other chars.  We need to save some time this time.<br>
+</p>
+
+<p>
+Remember, the multi-char words / phrases (hereby known as "words"), have character segmentations that we already know.<br>
+</p>
+
+<p>
+Our input is an unsegmented blob of letters.  We could segment them first and match them with existing words, as shown in this diagram:<br>
+</p>
+
+<p>
+<img src="segmented-word-matching.png" alt=""><br>
+</p>
+
+<p>
+After segmentation, the number of characters must match, so we are just matching 2 words, char-by-char.  This is already amenable to brute-force -- the number of words of a fixed length is on the order of 50K).  We could, of course, device more sophisticated algorithms to accelerate the search, but this is not necessary for our purposes.<br>
+</p>
+
+<h4>(C)  Find word / phrase by character(s)</h4>
+
+<p>
+Notice that we have done "from spelling to words" (用英文字母找詞語), but we could also do "from chars to words containing the chars" (用中文單字找詞語, as long as the characters occur in the target, in that order, but with other chars possibly interspersing).<br>
+</p>
+
+<p>
+This is also amenable to brute force.<br>
+</p>
+
+<p>
+==============================<br>
+</p>
+
+<p>
+In conclusion, all we need is to find the biggest (and most modern) word lists.  Users may want to stay subscribed to our web site because they want to have the latest word collections.<br>
+</p>
+
+
+<!-- End wiki content -->
+
+	</body>
+
+</html>
