@@ -9918,18 +9918,18 @@
 
 		// This function is specially for Chinese pinyin matching
 		patterns: function( input, context ) {
-			var i, j, patternsList = [], rule, replacement,
+			var pList = [], replacement, rule,
 				$menu, $li, $ul,
 				$element = this.$element,
 				$selector = $element.data('imeselector').$imeSetting,
 				selections = [], sorted = [],
 				k_n, dk, dn, d, score;
 
-			patternsList = this.inputmethod.patternsList;
+			pList = this.inputmethod.patternsList;
 			
 			// Find fuzzy match
-			for ( i = 0; i < patternsList.length; i++ ) {
-				rule = patternsList[i];
+			for (var m = 0; m < pList.length; m++ ) {
+				rule = pList[m];
 
 				// 1. convert input to Consonant-Nucleus form
 				k_n = k_n_form(input);
@@ -9941,10 +9941,10 @@
 				dn = distance_n(k_n[1], rule[1]);
 				
 				// 4. calculate overall distance
-				d = 0.55*dk + 0.45*dn;
+				d = 0.5*dk + 0.5*dn;
 
 				// 5. calculate score
-				score = 10000 * rule[4] * (1.0 - d);
+				score = rule[4] * (1.0 - d);
 
 				selections.push([rule[3], score]);
 
@@ -9952,12 +9952,14 @@
 					{ break; }
 			}
 
+			console.log("Selections = " + selections);
+
 			// Sort selections by score
-			sorted = selections.sort(function(a, b) {
-					return (a[1] > b[1]);
+			selections.sort(function(a, b) {
+					return (a[1] - b[1]);
 				});
 
-			replacement = sorted[0][0];
+			replacement = selections[0][0];
 
 			// Create selection menu
 			$menu = $('.ime-autocomplete', $selector);
@@ -9975,11 +9977,11 @@
 				$('li', $ul).navigate('destroy');
 			}
 
-			for (j = 0; j < sorted.length; j++) {
+			for (var n = 0; n < selections.length; n++) {
 				$li = $('<li></li>');
 				$li.appendTo($ul)
-					.text(sorted[j])
-					.data('replacement', sorted[j][0]);
+					.text(selections[n])
+					.data('replacement', selections[n][0]);
 			}
 
 			// Initialize jquery.navigate
@@ -10001,7 +10003,7 @@
 			// selectorPosition = $selector.position();
 
 			// Input string match test
-			return input.replace( sorted[0][0], replacement );
+			return input.replace( selections[0][0], replacement );
 
 			// *************** Local Functions ****************
 
@@ -10021,8 +10023,8 @@
 				}
 
 				// test for the rest
-				for (i = 0; i < consonants.length; i++) {
-					c = consonants[i];
+				for (var h = 0; h < consonants.length; h++) {
+					c = consonants[h];
 					if (str[0] == c) {
 						return ([c, str.substr(1)]);
 					}
@@ -10033,8 +10035,10 @@
 			// Find distance between 2 consonants
 			function distance_k(k1, k2) {
 
+				var i, j,
+				
 // See dicts/mandarin/README-fuzzy-matching.html for an explanation
-var distance_matrix_K =
+distance_matrix_K =
 [
 0.2,
 1.0,1.0,
@@ -10076,7 +10080,9 @@ var distance_matrix_K =
 			// Find distance between 2 nuclei
 			function distance_n(n1, n2) {
 
-var distance_matrix_N =
+				var i, j, 
+
+distance_matrix_N =
 [
 0.5,
 1.0,1.0,
