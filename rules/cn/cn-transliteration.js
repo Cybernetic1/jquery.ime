@@ -264,7 +264,7 @@ distance_matrix_N =
 			}
 
 			// ************ Main function begins here **************
-			return input;
+			//return input;
 			//console.log('input = ' + input);
 			pList = this.inputmethod.patternsList;
 
