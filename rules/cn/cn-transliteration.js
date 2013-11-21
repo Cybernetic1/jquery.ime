@@ -10034,7 +10034,7 @@
 			function distance_k(k1, k2) {
 
 // See dicts/mandarin/README-fuzzy-matching.html for an explanation
-var distance_matrix_K = \
+var distance_matrix_K =
 [
 0.2,
 1.0,1.0,
@@ -10070,13 +10070,13 @@ var distance_matrix_K = \
 				j = consonants.indexOf(k2);
 				// i = row, j = column
 				// calculate position in triangular matrix:
-				return distance_matrix_K[(i * (i + 1)/ 2 + j];
+				return distance_matrix_K[i * (i + 1)/ 2 + j];
 			}
 
 			// Find distance between 2 nuclei
 			function distance_n(n1, n2) {
 
-var distance_matrix_N = \
+var distance_matrix_N =
 [
 0.5,
 1.0,1.0,
