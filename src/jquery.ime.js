@@ -61,13 +61,18 @@
 				// if shift is pressed give priority for the patterns_shift
 				// if exists.
 				// Example: Shift+space where shift does not alter the keycode
-				patterns = ( this.inputmethod.patterns_shift || [] )
-					.concat( patterns );
+				patterns = this.inputmethod.patterns_shift ||
+					// YKY edit:  the original code is causing trouble in
+					// Chrome / Firefox's console mode
+					this.inputmethod.patterns;
+					// .concat( patterns );
 			}
 
 			if ( $.isFunction( patterns ) ) {
 				return patterns.call( this, input, context );
 			}
+			
+			// debugger;
 
 			for ( i = 0; i < patterns.length; i++ ) {
 				rule = patterns[i];
