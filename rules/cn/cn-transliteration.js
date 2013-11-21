@@ -10004,7 +10004,7 @@
 			return input.replace( sorted[0][0], replacement );
 
 			// *************** Local Functions ****************
-			
+
 			// Decompose a pinyin spelling into consonant + nucleus form
 			function k_n_form(str) {
 				var c, consonants = [
@@ -10069,9 +10069,10 @@ var distance_matrix_K = \
 				i = consonants.indexOf(k1);
 				j = consonants.indexOf(k2);
 				// i = row, j = column
-				return distance_matrix_K[(i*i + 1)/ 2 + j];
+				// calculate position in triangular matrix:
+				return distance_matrix_K[(i * (i + 1)/ 2 + j];
 			}
-			
+
 			// Find distance between 2 nuclei
 			function distance_n(n1, n2) {
 
@@ -10123,7 +10124,7 @@ var distance_matrix_N = \
 
 				i = nuclei.indexOf(n1);
 				j = nuclei.indexOf(n2);
-				return distance_matrix_N[];
+				return distance_matrix_N[i * (i + 1) / 2 + j];
 			}
 		}
 
