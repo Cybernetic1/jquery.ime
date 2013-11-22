@@ -575,7 +575,7 @@
 	};
 
 	IMESelector.defaults = {
-		defaultLanguage: 'en',
+		defaultLanguage: 'cn',
 		timeout: 2500 // Milliseconds after which IME widget hides itself.
 	};
 

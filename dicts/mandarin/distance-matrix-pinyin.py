@@ -4,13 +4,8 @@
 # For an explanation of the ideas, see:
 #	/dicts/mandarin/README.fuzzy-pinyin-matching.html
 
-import sys
-
-# fo = sys.stdout
-fo = open("distance-matrix-pinyin.js", "w")
-
-consonants = ['b','p','m','f','d','t','n','l','g','k','h','j','q','w','x','y','r', \
-	'z','c','s','zh','ch','sh' ];
+consonants = ['b','p','m','f','d','t','n','l','g','k','h','j','q','x', \
+	'zh','ch','sh','r', 'z','c','s','w','y' ];
 
 # classification tree of consonants
 cluster_K = \
@@ -118,17 +113,19 @@ def d(cluster, k1, k2):
 	# The distance is inside the string, following '='
 	return float(common.partition('=')[2])
 
-fo.write("distance_matrix_K = \\\n[")
+import sys
+# fo = sys.stdout
+
+f1 = open("distance-matrix-K.csv", "w")
 for i, k1 in enumerate(consonants):
 	for k2 in consonants[0:i]:
 		distance = d(cluster_K, k1, k2)
-		fo.write("{2},".format(k1, k2, distance))
-	fo.write("\n");
+		f1.write("{2},".format(k1, k2, distance))
+	f1.write("\n");
 
-fo.write("]\n\ndistance_matrix_N = \\\n[")
+f2 = open("distance-matrix-N.csv", "w")
 for i, n1 in enumerate(nuclei):
 	for n2 in nuclei[0:i]:
 		distance = d(cluster_N, n1, n2)
-		fo.write("{2},".format(n1, n2, distance))
-	fo.write("\n");
-fo.write("]\n\n")
+		f2.write("{2},".format(n1, n2, distance))
+	f2.write("\n");
