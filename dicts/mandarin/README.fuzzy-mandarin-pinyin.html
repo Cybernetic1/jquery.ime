@@ -63,15 +63,19 @@ to give more weight to the nuclei because people usually have less trouble with 
 </p>
 
 <p>
-Each character <em>c</em> has a "score" <em>s</em>, which is its occurrence frequency.<br>
+We can use (1 - <em>d</em>) to represent the matching score.<br>
 </p>
 
 <p>
-So a misspelled character should have a lower score than its original score, perhaps via:<br>
+Each character <em>c</em> also has an occurrence frequency, <em>f</em>.  The distribution of <em>f</em> follows exponential decay, so it has a very long tail.  After taking the logorithm it becomes more "manageable".<br>
+</p>
+
+<p>
+We need to <em>combine</em> the matching score with frequency, perhaps via:<br>
 <div style='padding-left: 30pt'>
 <img src="./README.fuzzy-mandarin-pinyin/equation007.png" alt=""><br>
 </div>
-where <em>β</em> is a parametric constant the user can tweak.  This makes <em>s' = s</em> when the distance <em>d</em> = 0.  If <em>β</em> is big, distant spellings will have low ranking (this is suitable for more experienced users, who usually spell correctly), and if <em>β</em> is small, more misspelled characters will be displayed instead of rare (low-frequency) characters).<br>
+where <em>C,D</em> are parametric constants the user can tweak.  The purpose of <em>C</em> is to make the factor positive.  If the factor <img src="./README.fuzzy-mandarin-pinyin/equation008.png" alt="">, distant spellings will have low ranking (this is suitable for more experienced users, who usually spell correctly), otherwise the influence of <em>f</em> would be bigger, more misspelled characters will be displayed instead of rare (low-frequency) ones.<br>
 </p>
 
 <p>

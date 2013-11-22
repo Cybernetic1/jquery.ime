@@ -10062,9 +10062,10 @@ distance_matrix_N =
 				d = 0.5*dk + 0.5*dn;
 
 				// 5. calculate score
+				// The number '19' in denominator can be tweaked.
 				score = (1.0 - d) * (Math.log(rule[4]) + 16) / 19;
 
-				unsorted.push([rule[3], rule[0] + rule[1], dk, dn, score]);
+				unsorted.push([rule[3], rule[0] + rule[1], dk, dn, score.toFixed(5)]);
 
 				//if (selections.length > 100)
 				//	{ break; }
