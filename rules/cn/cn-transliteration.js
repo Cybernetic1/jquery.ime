@@ -10,7 +10,7 @@
 		author: 'YKY',
 		license: 'GPLv3',
 		version: '1.0',
-		patternsList: [
+		pinyinList: [
 ['d','e',0,'的',4.094325318],
 ['y','i',1,'一',1.576567780],
 ['sh','i',4,'是',1.351646352],
@@ -127,19 +127,18 @@
 
 		// This function is specially for Chinese pinyin matching
 		patterns: function( input, context ) {
-			var m, n, h, pList = [], replacement, rule,
+			var i, j, pinyinList = [], replacement, rule,
+				unsorted = [], selections = [],
+				k_n, dk, dn, d, // score, beta = 30.0,
 				$menu, $li, $ul,
 				$element = this.$element,
-				$selector = $element.data('imeselector').$imeSetting,
-				unsorted = [], selections = [],
-				k_n, dk, dn, d, score,
-				beta = 30.0;
+				$selector = $element.data('imeselector').$imeSetting;
 
 			// *************** Local Functions ****************
 
 			// Decompose a pinyin spelling into consonant + nucleus form
 			function k_n_form(str) {
-				var c, consonants_1 = [
+				var i, c, consonants = [
 				// 'zh','ch','sh','z','c','s' are treated as special cases
 				'b','p','m','f','d','t','n','l','g','k','h','j','q','w','x','y','r' ];
 
@@ -153,8 +152,8 @@
 				}
 
 				// test for the rest
-				for (h = 0; h < consonants_1.length; h++) {
-					c = consonants_1[h];
+				for (i = 0; i < consonants_1.length; i++) {
+					c = consonants_1[i];
 					if (str[0] === c) {
 						return ([c, str.substr(1)]);
 					}
@@ -165,7 +164,7 @@
 			// Find distance between 2 consonants
 			function distance_k(k1, k2) {
 
-				var i, j,
+				var i, j, tmp,
 
 // See dicts/mandarin/README-fuzzy-matching.html for an explanation
 distance_matrix_K =
@@ -199,10 +198,15 @@ distance_matrix_K =
 
 				if (k1 === k2)
 					{ return 0.0; }
+				if (k1 === '' || k2 === '')
+					{ return 1.0; }
 
 				i = consonants.indexOf(k1);
 				j = consonants.indexOf(k2);
 				// i = row, j = column
+				if (j > i) {
+					tmp = i; i = j; j = tmp;
+					}
 				// calculate position in triangular matrix:
 				return distance_matrix_K[i * (i + 1)/ 2 + j];
 			}
@@ -210,7 +214,7 @@ distance_matrix_K =
 			// Find distance between 2 nuclei
 			function distance_n(n1, n2) {
 
-				var i2, j2,
+				var i, j, tmp,
 
 distance_matrix_N =
 [
@@ -257,20 +261,24 @@ distance_matrix_N =
 
 				if (n1 === n2)
 					{ return 0.0; }
+				if (n1 === '' || n2 === '')
+					{ return 1.0; }
 
-				i2 = nuclei.indexOf(n1);
-				j2 = nuclei.indexOf(n2);
-				return distance_matrix_N[i2 * (i2 + 1) / 2 + j2];
+				i = nuclei.indexOf(n1);
+				j = nuclei.indexOf(n2);
+				if (j > i) {
+					tmp = i; i = j; j = tmp;
+				}
+				return distance_matrix_N[i * (i + 1) / 2 + j];
 			}
 
 			// ************ Main function begins here **************
-			//return input;
-			//console.log('input = ' + input);
-			pList = this.inputmethod.patternsList;
+
+			pinyinList = this.inputmethod.pinyinList;
 
 			// Find fuzzy match
-			for (m = 0; m < pList.length; m++ ) {
-				rule = pList[m];
+			for (i = 0; i < pinyinList.length; i++ ) {
+				rule = pinyinList[i];
 
 				// 1. convert input to Consonant-Nucleus form
 				k_n = k_n_form(input);
@@ -293,7 +301,7 @@ distance_matrix_N =
 				//	{ break; }
 			}
 
-			return input;
+			//return input;
 			// console.log("Selections = " + selections);
 
 			// Sort selections by score
@@ -304,11 +312,13 @@ distance_matrix_N =
 			// Get only the top 100 suggestions
 			selections = unsorted.slice(0, 100);
 
+			// the top of selections
 			replacement = selections[0][0];
 
 			// Create selection menu
 			$menu = $('.ime-autocomplete', $selector);
 
+			// Initialize selection menu
 			if (!$menu.length) {
 				$menu = $('<div class="ime-autocomplete"></div>');
 				$ul = $('<ul></ul>');
@@ -321,6 +331,7 @@ distance_matrix_N =
 				$('li', $ul).navigate('destroy');
 			}
 
+			// Fill data into selection menu
 			for (n = 0; n < selections.length; n++) {
 				$li = $('<li></li>');
 				$li.appendTo($ul)
@@ -328,22 +339,22 @@ distance_matrix_N =
 					.data('replacement', selections[n][0]);
 			}
 
-			// Initialize jquery.navigate
+			// Initialize jquery.navigate to make menu items keyboard-navigable
 			$('ul li', $menu).not('.nokeyboard').navigate({
 			wrap: true
 		}).click(function(){
 			var $input = $element,
-				val = $input.val(),
-				newReplacement = $(this).data('replacement'),
-				pos = val.lastIndexOf(replacement);
-
-			// Reset
+					val = $input.val(),
+					newReplacement = $(this).data('replacement'),
+					pos = val.lastIndexOf(replacement);
+			// Reset menu
 			$('li', $ul).navigate('destroy');
 			$menu.remove();
+			// Replace input box contents
 			$input.val( val.substr(0, pos) + newReplacement ).focus();
 		});
 
-			// Positioning the menu
+			// Positioning the menu (YKY: is this code needed?)
 			var selectorPosition = $selector.position();
 
 			// Input string match test
