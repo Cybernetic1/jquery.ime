@@ -6,7 +6,7 @@
   overflow: auto;
   overflow-x: hidden;
   width: auto;
-  height: 150px;
+  max-height: 288px;
   box-shadow: 6px 8px 32px rgba(0,0,0,0.32);
 }
 
@@ -23,8 +23,8 @@
 
 .ime-autocomplete li {
   min-width: 120px;
-  padding: 6px;
   cursor: pointer;
+  height: 32px;
 }
 
 .ime-autocomplete li:active,
@@ -39,4 +39,14 @@
 .ime-autocomplete li:hover {
   background-color: #2073cb;
   color: white;
+}
+
+.ime-autocomplete li:before {
+	content: attr(data-index) ".";
+	padding: 6px;
+	float: left;
+}
+
+.ime-autocomplete li .selection {
+  padding: 6px;
 }
