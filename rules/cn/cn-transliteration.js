@@ -10037,7 +10037,7 @@ distance_matrix_N =
 			var i, replacement, rule,
 				pinyinList = this.inputmethod.pinyinList,
 				unsorted = [], selections = [],
-				k_n, dk, dn, d, // score, beta = 30.0,
+				k_n, dk, dn, d, score, // beta = 30.0,
 				$menu, $li, $ul,
 				$element = this.$element,
 				$selector = $element.data('imeselector').$imeSetting;
@@ -10062,9 +10062,9 @@ distance_matrix_N =
 				d = 0.5*dk + 0.5*dn;
 
 				// 5. calculate score
-				// score = rule[4] * Math.exp(beta * (1.0 - d));
+				score = (1.0 - d) * (Math.log(rule[4]) + 16) / 19;
 
-				unsorted.push([rule[3], rule[0] + rule[1], dk, dn, 1-d]);
+				unsorted.push([rule[3], rule[0] + rule[1], dk, dn, score]);
 
 				//if (selections.length > 100)
 				//	{ break; }
