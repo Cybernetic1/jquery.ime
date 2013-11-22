@@ -36,7 +36,7 @@
 		},
 
 		getDefaultLanguage: function () {
-			return 'en';
+			return 'cn';
 		},
 
 		getPreviousLanguages: function () {

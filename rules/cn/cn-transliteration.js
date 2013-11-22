@@ -9919,11 +9919,12 @@
 
 		// This function is specially for Chinese pinyin matching
 		patterns: function( input, context ) {
-			var i, j, patternsList = [], rule, replacement,
+			var i, j, patternsList = [], rule, replacement, timer,
 				$menu, $li, $ul,
 				$element = this.$element,
 				$selector = $element.data('imeselector'),
-				selection = [], result = null;
+				selection = [], result = null,
+				liHeight = 32;
 			
 			patternsList = this.inputmethod.patternsList;
 			
@@ -9964,6 +9965,34 @@
 				$ul.empty();
 				$('li', $ul).navigate('destroy');
 			}
+
+			// Bind scroll event
+			$menu.scroll(function(e) {
+				var $this, scrollTop, newPos, index, $li;
+
+				$this = $(this);
+				// Clear all timer
+				clearTimeout(timer);
+
+				// Restrict scroll position must be align to the top li
+				timer = setTimeout(function() {
+					scrollTop = $this.scrollTop();
+					index = Math.round(scrollTop / liHeight);
+					newPos = index * liHeight;
+
+					// Get appeared li elements
+					$li = $('li:gt(' + (index - 1) + ')', $this);
+					$li.each(function(index, elem) {
+						if(index > 8) return false;
+						$(elem).attr('data-index', (index + 1));
+					});
+
+					// Scroll to new position
+					if((scrollTop % liHeight) > 0) {
+						$this.stop().animate({scrollTop: newPos}, 'fast');
+					}
+				}, 100);
+			});
 			
 			// Insert selection to the menu
 			for(j = 0; j < selection.length; j++) {
