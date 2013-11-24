@@ -380,6 +380,8 @@
 
 			data = $this.data( 'ime' );
 
+			$this.addClass('ime-input');
+
 			if ( !data ) {
 				data = new IME( this, options );
 				$this.data( 'ime', data );

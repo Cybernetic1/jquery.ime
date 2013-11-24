@@ -10019,7 +10019,6 @@
 				$('li', $ul).navigate('destroy');
 				$menu.remove();
 				$input.val( val.substr(0, pos) + newReplacement ).focus();
-				$selector.resetTimer(); // Resume ime.selector timer
 			});
 
 			// Input string match test
