@@ -48,10 +48,6 @@
 			$( 'body' ).append( this.$imeSetting );
 		},
 
-		addInput: function() {
-
-		},
-
 		stopTimer: function () {
 			if ( this.timer ) {
 				clearTimeout( this.timer );
