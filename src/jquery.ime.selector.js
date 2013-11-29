@@ -46,6 +46,9 @@
 
 			this.$imeSetting.append( this.$menu );
 			$( 'body' ).append( this.$imeSetting );
+			
+			// Make element draggable
+			this.$imeSetting.drags();
 		},
 
 		stopTimer: function () {
@@ -120,8 +123,7 @@
 				if ( t.hasClass( 'imeselector-toggle' )) {
 					imeselector.toggle();
 				}
-
-				return false;
+				e.stopPropagation();
 			} );
 
 			// imeselector.$element.on( 'blur.ime', function () {
@@ -151,31 +153,31 @@
 				imeselector.$imeSetting.removeClass( 'ime-onfocus' );
 			} );
 
-			imeselector.$menu.on( 'click.ime', 'li', function() {
+			imeselector.$menu.on( 'click.ime', 'li', function(e) {
 				imeselector.$element.focus();
 
-				return false;
+				e.preventDefault();
 			} );
 
-			imeselector.$menu.on( 'click.ime', 'li.ime-im', function () {
+			imeselector.$menu.on( 'click.ime', 'li.ime-im', function ( e ) {
 				imeselector.selectIM( $( this ).data( 'ime-inputmethod' ) );
 				imeselector.$element.trigger( 'setim.ime', $( this ).data( 'ime-inputmethod' ) );
 
-				return false;
+				e.preventDefault();
 			} );
 
-			imeselector.$menu.on( 'click.ime', 'li.ime-lang', function () {
+			imeselector.$menu.on( 'click.ime', 'li.ime-lang', function ( e ) {
 				var im = imeselector.selectLanguage( $( this ).attr( 'lang' ) );
 
 				imeselector.$element.trigger( 'setim.ime', im );
 
-				return false;
+				e.preventDefault();
 			} );
 
-			imeselector.$menu.on( 'click.ime', 'div.ime-disable', function () {
+			imeselector.$menu.on( 'click.ime', 'div.ime-disable', function ( e ) {
 				imeselector.disableIM();
 
-				return false;
+				e.preventDefault();
 			} );
 
 			// Just make it work as a regular link
@@ -254,8 +256,6 @@
 
 				e.preventDefault();
 				e.stopPropagation();
-
-				return false;
 			}
 
 			return true;
@@ -602,7 +602,7 @@
 
 			ime.$element = $this;
 			ime.elementListen();
-
+			
 			if ( !data ) {
 				$this.data( 'imeselector', ( data = ime ));
 			}
@@ -712,3 +712,47 @@
 		}
 	};
 }( jQuery ) );
+
+(function($) {
+    $.fn.drags = function(opt) {
+
+        opt = $.extend({handle:"",cursor:"move"}, opt);
+
+        if(opt.handle === "") {
+            var $el = this;
+        } else {
+            var $el = this.find(opt.handle);
+        }
+
+        return $el.css('cursor', opt.cursor).on("mousedown", function(e) {
+            if(opt.handle === "") {
+                var $drag = $(this).addClass('draggable');
+            } else {
+                var $drag = $(this).addClass('active-handle').parent().addClass('draggable');
+            }
+            var z_idx = $drag.css('z-index'),
+                drg_h = $drag.outerHeight(),
+                drg_w = $drag.outerWidth(),
+                pos_y = $drag.offset().top + drg_h - e.pageY,
+                pos_x = $drag.offset().left + drg_w - e.pageX;
+            $drag.css('z-index', 1000).parents().on("mousemove", function(e) {
+                $('.draggable').offset({
+                    top:e.pageY + pos_y - drg_h,
+                    left:e.pageX + pos_x - drg_w
+                }).on("mouseup", function() {
+                    $(this).removeClass('draggable').css('z-index', z_idx);
+                });
+            });
+            e.preventDefault(); // disable selection
+			
+        }).on("mouseup", function(e) {
+            if(opt.handle === "") {
+                $(this).removeClass('draggable');
+            } else {
+                $(this).removeClass('active-handle').parent().removeClass('draggable');
+            }
+			e.preventDefault();
+        });
+
+    }
+})(jQuery);
