@@ -120,7 +120,7 @@
 			imeselector.$imeSetting.on( 'click.ime', function ( e ) {
 				var t = $( e.target );
 
-				if ( t.hasClass( 'imeselector-toggle' )) {
+				if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
 					imeselector.toggle();
 				}
 				e.stopPropagation();
@@ -164,6 +164,7 @@
 				imeselector.$element.trigger( 'setim.ime', $( this ).data( 'ime-inputmethod' ) );
 
 				e.preventDefault();
+				return false;
 			} );
 
 			imeselector.$menu.on( 'click.ime', 'li.ime-lang', function ( e ) {
@@ -172,12 +173,14 @@
 				imeselector.$element.trigger( 'setim.ime', im );
 
 				e.preventDefault();
+				return false;
 			} );
 
 			imeselector.$menu.on( 'click.ime', 'div.ime-disable', function ( e ) {
 				imeselector.disableIM();
 
 				e.preventDefault();
+				return false;
 			} );
 
 			// Just make it work as a regular link
@@ -193,11 +196,18 @@
 		},
 
 		elementListen: function ( e ) {
-			var imeselector = this;
+			var imeselector = this,
+				ime;
 
 			imeselector.$element.on( 'focus.ime', function ( e ) {
+				ime = $( 'body' ).data( 'ime' );
+				
 				imeselector.selectLanguage( imeselector.decideLanguage() );
 				imeselector.$element = $( e.target );
+
+				if ( ime != null ) {
+					ime.$element = $( e.target );
+				}
 				imeselector.focus();
 				e.stopPropagation();
 			} );
@@ -592,19 +602,23 @@
 	$.fn.imeselector = function ( options ) {
 		return this.each( function () {
 			var $this = $( this ),
-				data = $this.data( 'imeselector' ),
-				ime = $( 'body' ).data( 'ime' );
+				imeselector = $( 'body' ).data( 'imeselector' ),
+				ime = $( 'body' ).data( 'ime' ),
+				data = $this.data( 'imeselector' );
 
-			if ( !ime ) {
-				ime = new IMESelector( this, options );
-				$( 'body' ).data( 'ime', ime );
+			if ( !imeselector ) {
+				imeselector = new IMESelector( this, options );
+				$( 'body' ).data( 'imeselector', imeselector );
+				$this.data( 'imeselector', imeselector );
 			}
-
-			ime.$element = $this;
-			ime.elementListen();
 			
 			if ( !data ) {
-				$this.data( 'imeselector', ( data = ime ));
+				if( ime != null )
+					ime.$element = $this;
+
+				imeselector.$element = $this;
+				imeselector.elementListen();
+				$this.data( 'imeselector', imeselector );
 			}
 
 			if ( typeof options === 'string' ) {
@@ -715,7 +729,7 @@
 
 (function($) {
     $.fn.drags = function(opt) {
-
+	
         opt = $.extend({handle:"",cursor:"move"}, opt);
 
         if(opt.handle === "") {
@@ -725,6 +739,7 @@
         }
 
         return $el.css('cursor', opt.cursor).on("mousedown", function(e) {
+						
             if(opt.handle === "") {
                 var $drag = $(this).addClass('draggable');
             } else {
@@ -736,6 +751,7 @@
                 pos_y = $drag.offset().top + drg_h - e.pageY,
                 pos_x = $drag.offset().left + drg_w - e.pageX;
             $drag.css('z-index', 1000).parents().on("mousemove", function(e) {
+				
                 $('.draggable').offset({
                     top:e.pageY + pos_y - drg_h,
                     left:e.pageX + pos_x - drg_w
@@ -746,6 +762,8 @@
             e.preventDefault(); // disable selection
 			
         }).on("mouseup", function(e) {
+		
+			
             if(opt.handle === "") {
                 $(this).removeClass('draggable');
             } else {
