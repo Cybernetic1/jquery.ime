@@ -11,17 +11,18 @@
 	 * @param {String} options.helpHandler.ime Id of the input method
 	 */
 	function IME( element, options ) {
-		this.$element = $( element );
 		// This needs to be delayed here since extending language list happens at DOM ready
 		$.ime.defaults.languages = arrayKeys( $.ime.languages );
+		this.$elements = [];
+		this.$element = null;
 		this.options = $.extend( {}, $.ime.defaults, options );
 		this.active = false;
 		this.shifted = false;
 		this.inputmethod = null;
 		this.language = null;
 		this.context = '';
-		this.selector = this.$element.imeselector( this.options );
-		this.listen();
+		this.selector = null;
+		this.addElement( element );
 	}
 
 	IME.prototype = {
@@ -30,13 +31,23 @@
 		/**
 		 * Listen for events and bind to handlers
 		 */
-		listen: function () {
-			this.$element.on( 'keypress.ime', $.proxy( this.keypress, this ) );
-			this.$element.on( 'keyup.ime', $.proxy( this.keyup, this ) );
-			this.$element.on( 'keydown.ime', $.proxy( this.keydown, this ) );
-			this.$element.on( 'destroy.ime', $.proxy( this.destroy, this ) );
-			this.$element.on( 'enable.ime', $.proxy( this.enable, this ) );
-			this.$element.on( 'disable.ime', $.proxy( this.disable, this ) );
+		listen: function ( element ) {
+			element.on( 'keypress.ime', $.proxy( this.keypress, this ) );
+			element.on( 'keyup.ime', $.proxy( this.keyup, this ) );
+			element.on( 'keydown.ime', $.proxy( this.keydown, this ) );
+			element.on( 'destroy.ime', $.proxy( this.destroy, this ) );
+			element.on( 'enable.ime', $.proxy( this.enable, this ) );
+			element.on( 'disable.ime', $.proxy( this.disable, this ) );
+		},
+		
+		/**
+		 * Add element to IME
+		 */
+		addElement: function ( element ) {
+			var $element = $( element );
+			
+			this.selector = $element.imeselector( this.options );
+			this.listen( $element );
 		},
 
 		/**
@@ -120,7 +131,8 @@
 		 */
 		keypress: function ( e ) {
 			var altGr = false,
-				c, startPos, pos, endPos, divergingPos, input, replacement;
+				c, startPos, pos, endPos, divergingPos, input, replacement,
+				$element = $( e.target );
 
 			if ( !this.active ) {
 				return true;
@@ -156,7 +168,7 @@
 			// Get the current caret position. The user may have selected text to overwrite,
 			// so get both the start and end position of the selection. If there is no selection,
 			// startPos and endPos will be equal.
-			pos = this.getCaretPosition( this.$element );
+			pos = this.getCaretPosition( $element );
 			startPos = pos[0];
 			endPos = pos[1];
 
@@ -164,7 +176,7 @@
 			// to provide context for the transliteration regexes.
 			// We need to append c because it hasn't been added to $this.val() yet
 			input = this.lastNChars(
-				this.$element.val() || this.$element.text(),
+				$element.val() || $element.text(),
 				startPos,
 				this.inputmethod.maxKeyLength
 			);
@@ -195,7 +207,7 @@
 			divergingPos = this.firstDivergence( input, replacement );
 			input = input.substring( divergingPos );
 			replacement = replacement.substring( divergingPos );
-			replaceText( this.$element, replacement, startPos - input.length + 1, endPos );
+			replaceText( $element, replacement, startPos - input.length + 1, endPos );
 
 			e.stopPropagation();
 
@@ -237,7 +249,9 @@
 		 */
 		destroy: function () {
 			$( 'body' ).off( '.ime' );
-			this.$element.off( '.ime' ).removeData( 'ime' ).removeData( 'imeselector' );
+			this.$elements.each(function() {
+				$(this).off( '.ime' ).removeData( 'ime' ).removeData( 'imeselector' );
+			});
 		},
 
 		/**
@@ -371,7 +385,8 @@
 	 */
 	$.fn.ime = function ( option ) {
 		return this.each( function () {
-			var data,
+			var ime,
+				data,
 				$this = $( this ),
 				options = typeof option === 'object' && option;
 
@@ -383,11 +398,17 @@
 				return;
 			}
 
-			data = $this.data( 'ime' );
+			ime = $('body').data( 'ime' );
+			data = $(this).data( 'ime' );
 
+			if ( !ime ) {
+				ime = new IME( this, options );
+				$('body').data( 'ime', ime );
+			}
+			
 			if ( !data ) {
-				data = new IME( this, options );
-				$this.data( 'ime', data );
+				$this.data( 'ime', ime );
+				ime.addElement(this);
 			}
 
 			if ( typeof option === 'string' ) {

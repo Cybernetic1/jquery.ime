@@ -20,14 +20,15 @@
 
 		init: function () {
 			this.prepareSelectorMenu();
-			this.position();
-			this.$imeSetting.hide();
+			//this.position();
+			//this.$imeSetting.hide();
 		},
 
 		prepareSelectorMenu: function () {
 			// TODO: In this approach there is a menu for each editable area.
 			// With correct event mapping we can probably reduce it to one menu.
 			this.$imeSetting = $( selectorTemplate );
+
 			this.$menu = $( '<div class="imeselector-menu" role="menu">' );
 			this.$menu.append(
 				imeListTitle(),
@@ -45,6 +46,9 @@
 
 			this.$imeSetting.append( this.$menu );
 			$( 'body' ).append( this.$imeSetting );
+			
+			// Make element draggable
+			this.$imeSetting.drags();
 		},
 
 		stopTimer: function () {
@@ -78,23 +82,23 @@
 
 		focus: function () {
 			// Hide all other IME settings and collapse open menus
-			$( 'div.imeselector' ).hide();
-			$( 'div.imeselector-menu' ).removeClass( 'ime-open' );
+			//$( 'div.imeselector' ).hide();
+			//$( 'div.imeselector-menu' ).removeClass( 'ime-open' );
 			this.$imeSetting.show();
-			this.resetTimer();
+			//this.resetTimer();
 		},
 
 		show: function () {
 			this.$menu.addClass( 'ime-open' );
-			this.stopTimer();
-			this.$imeSetting.show();
+			//this.stopTimer();
+			//this.$imeSetting.show();
 
 			return false;
 		},
 
 		hide: function () {
 			this.$menu.removeClass( 'ime-open' );
-			this.resetTimer();
+			//this.resetTimer();
 
 			return false;
 		},
@@ -116,24 +120,23 @@
 			imeselector.$imeSetting.on( 'click.ime', function ( e ) {
 				var t = $( e.target );
 
-				if ( t.hasClass( 'imeselector-toggle' ) ) {
+				if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
 					imeselector.toggle();
 				}
-
-				return false;
+				e.stopPropagation();
 			} );
 
-			imeselector.$element.on( 'blur.ime', function () {
-				if ( !imeselector.$imeSetting.hasClass( 'ime-onfocus' ) ) {
-					imeselector.$imeSetting.hide();
-					imeselector.hide();
-				}
-			} );
+			// imeselector.$element.on( 'blur.ime', function () {
+			// 	if ( !imeselector.$imeSetting.hasClass( 'ime-onfocus' ) ) {
+			// 		imeselector.$imeSetting.hide();
+			// 		imeselector.hide();
+			// 	}
+			// } );
 
 			// Hide the menu when clicked outside
-			$( 'html' ).click( function () {
-				imeselector.hide();
-			} );
+			// $( 'html' ).click( function () {
+			// 	imeselector.hide();
+			// } );
 
 			// ... but when clicked on window do not propagate it.
 			this.$menu.on( 'click', function ( event ) {
@@ -143,37 +146,40 @@
 			imeselector.$imeSetting.mouseenter( function () {
 				// We don't want the selector to disappear
 				// while the user is trying to click it
-				imeselector.stopTimer();
+				// imeselector.stopTimer();
 				imeselector.$imeSetting.addClass( 'ime-onfocus' );
 			} ).mouseleave( function () {
-				imeselector.resetTimer();
+				// imeselector.resetTimer();
 				imeselector.$imeSetting.removeClass( 'ime-onfocus' );
 			} );
 
-			imeselector.$menu.on( 'click.ime', 'li', function() {
+			imeselector.$menu.on( 'click.ime', 'li', function(e) {
 				imeselector.$element.focus();
 
-				return false;
+				e.preventDefault();
 			} );
 
-			imeselector.$menu.on( 'click.ime', 'li.ime-im', function () {
+			imeselector.$menu.on( 'click.ime', 'li.ime-im', function ( e ) {
 				imeselector.selectIM( $( this ).data( 'ime-inputmethod' ) );
 				imeselector.$element.trigger( 'setim.ime', $( this ).data( 'ime-inputmethod' ) );
 
+				e.preventDefault();
 				return false;
 			} );
 
-			imeselector.$menu.on( 'click.ime', 'li.ime-lang', function () {
+			imeselector.$menu.on( 'click.ime', 'li.ime-lang', function ( e ) {
 				var im = imeselector.selectLanguage( $( this ).attr( 'lang' ) );
 
 				imeselector.$element.trigger( 'setim.ime', im );
 
+				e.preventDefault();
 				return false;
 			} );
 
-			imeselector.$menu.on( 'click.ime', 'div.ime-disable', function () {
+			imeselector.$menu.on( 'click.ime', 'div.ime-disable', function ( e ) {
 				imeselector.disableIM();
 
+				e.preventDefault();
 				return false;
 			} );
 
@@ -182,27 +188,39 @@
 				e.stopPropagation();
 			} );
 
+			// Update IM selector position when the window is resized
+			// or the browser window is zoomed in or zoomed out
+			// $( window ).resize( function () {
+			// 	imeselector.position();
+			// } );
+		},
+
+		elementListen: function ( e ) {
+			var imeselector = this,
+				ime;
+
 			imeselector.$element.on( 'focus.ime', function ( e ) {
+				ime = $( 'body' ).data( 'ime' );
+				
 				imeselector.selectLanguage( imeselector.decideLanguage() );
+				imeselector.$element = $( e.target );
+
+				if ( ime != null ) {
+					ime.$element = $( e.target );
+				}
 				imeselector.focus();
 				e.stopPropagation();
 			} );
 
 			imeselector.$element.attrchange( function ( ) {
-				if ( imeselector.$element.is( ':hidden' ) ) {
-					imeselector.$imeSetting.hide();
-				}
+				// if ( imeselector.$element.is( ':hidden' ) ) {
+				// 	imeselector.$imeSetting.hide();
+				// }
 			} );
 
 			// Possible resize of textarea
-			imeselector.$element.on( 'mouseup.ime', $.proxy( this.position, this ) );
+			// imeselector.$element.on( 'mouseup.ime', $.proxy( this.position, this ) );
 			imeselector.$element.on( 'keydown.ime', $.proxy( this.keydown, this ) );
-
-			// Update IM selector position when the window is resized
-			// or the browser window is zoomed in or zoomed out
-			$( window ).resize( function () {
-				imeselector.position();
-			} );
 		},
 
 		/**
@@ -230,7 +248,6 @@
 					} else {
 						languageCode = this.decideLanguage();
 						this.selectLanguage( languageCode );
-
 						if ( !ime.isActive() && $.ime.languages[languageCode] ) {
 							// Even after pressing toggle shortcut again, it is still disabled
 							// Check if there is a previously used input method.
@@ -249,8 +266,6 @@
 
 				e.preventDefault();
 				e.stopPropagation();
-
-				return false;
 			}
 
 			return true;
@@ -435,6 +450,7 @@
 			this.$menu.find( '.ime-checked' ).removeClass( 'ime-checked' );
 			this.$menu.find( 'li[data-ime-inputmethod=' + inputmethodId + ']' )
 				.addClass( 'ime-checked' );
+			
 			ime = this.$element.data( 'ime' );
 
 			if ( inputmethodId === 'system' ) {
@@ -452,7 +468,7 @@
 					$.ime.sources[inputmethodId].name
 				);
 
-				imeselector.position();
+				//imeselector.position();
 
 				// Save this preference
 				$.ime.preferences.save();
@@ -468,7 +484,7 @@
 			this.$element.data( 'ime' ).disable();
 			this.$imeSetting.find( 'a.ime-name' ).text( '' );
 			this.hide();
-			this.position();
+			//this.position();
 
 			// Save this preference
 			$.ime.preferences.save();
@@ -586,10 +602,23 @@
 	$.fn.imeselector = function ( options ) {
 		return this.each( function () {
 			var $this = $( this ),
+				imeselector = $( 'body' ).data( 'imeselector' ),
+				ime = $( 'body' ).data( 'ime' ),
 				data = $this.data( 'imeselector' );
 
+			if ( !imeselector ) {
+				imeselector = new IMESelector( this, options );
+				$( 'body' ).data( 'imeselector', imeselector );
+				$this.data( 'imeselector', imeselector );
+			}
+			
 			if ( !data ) {
-				$this.data( 'imeselector', ( data = new IMESelector( this, options ) ) );
+				if( ime != null )
+					ime.$element = $this;
+
+				imeselector.$element = $this;
+				imeselector.elementListen();
+				$this.data( 'imeselector', imeselector );
 			}
 
 			if ( typeof options === 'string' ) {
@@ -697,3 +726,51 @@
 		}
 	};
 }( jQuery ) );
+
+(function($) {
+    $.fn.drags = function(opt) {
+	
+        opt = $.extend({handle:"",cursor:"move"}, opt);
+
+        if(opt.handle === "") {
+            var $el = this;
+        } else {
+            var $el = this.find(opt.handle);
+        }
+
+        return $el.css('cursor', opt.cursor).on("mousedown", function(e) {
+						
+            if(opt.handle === "") {
+                var $drag = $(this).addClass('draggable');
+            } else {
+                var $drag = $(this).addClass('active-handle').parent().addClass('draggable');
+            }
+            var z_idx = $drag.css('z-index'),
+                drg_h = $drag.outerHeight(),
+                drg_w = $drag.outerWidth(),
+                pos_y = $drag.offset().top + drg_h - e.pageY,
+                pos_x = $drag.offset().left + drg_w - e.pageX;
+            $drag.css('z-index', 1000).parents().on("mousemove", function(e) {
+				
+                $('.draggable').offset({
+                    top:e.pageY + pos_y - drg_h,
+                    left:e.pageX + pos_x - drg_w
+                }).on("mouseup", function() {
+                    $(this).removeClass('draggable').css('z-index', z_idx);
+                });
+            });
+            e.preventDefault(); // disable selection
+			
+        }).on("mouseup", function(e) {
+		
+			
+            if(opt.handle === "") {
+                $(this).removeClass('draggable');
+            } else {
+                $(this).removeClass('active-handle').parent().removeClass('draggable');
+            }
+			e.preventDefault();
+        });
+
+    }
+})(jQuery);

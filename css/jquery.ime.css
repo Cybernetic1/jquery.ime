@@ -1,5 +1,5 @@
 .imeselector {
-	position: absolute;
+	position: fixed;
 	/* @embed */
 	background: url('../images/ime-active.png') no-repeat left center;
 	background-image: -webkit-linear-gradient(transparent, transparent), url('../images/ime-active.svg');
@@ -17,6 +17,8 @@
 	font-family: sans-serif;
 	white-space: nowrap;
 	z-index: 1000;
+	left: 200px;
+	top: 100px;
 }
 
 .imeselector:hover {
