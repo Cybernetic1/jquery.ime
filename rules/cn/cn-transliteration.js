@@ -10108,10 +10108,16 @@
 
 			// Fill data into selection menu
 			for ( i = 0; i < selections.length; i++ ) {
-				$li = $( '<li></li>' );
+				$li = $( '<li><div class="image"><img src=""></img></div><div class="word"></div></li>' );
 				$li.appendTo( $ul )
-					.text( selections[i][0] + '(' + selections[i][1] + ')' )
 					.data( 'replacement', selections[i][0] );
+
+				// Insert matched word to menu
+				$('.word', $li).html( selections[i][0] + '</br><em>' + selections[i][1] + '</em>');
+
+				// Insert image to menu
+				// TODO: fetch proper image to menu
+				$('.image img', $li).attr('src', 'http://placehold.it/60x60');
 			}
 
 			// Bind scroll event
