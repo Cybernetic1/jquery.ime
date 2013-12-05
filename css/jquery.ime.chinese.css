@@ -25,6 +25,8 @@
   min-width: 120px;
   cursor: pointer;
   height: 32px;
+  line-height: 32px;
+  padding: 0 6px;
 }
 
 .ime-autocomplete li:active,
