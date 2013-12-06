@@ -10223,9 +10223,11 @@
 	          break;
 	        case options.keys.select:
 	          $current.trigger('click');
-	          e.preventDefault();
 	          break;
 	      }
+
+	      e.preventDefault();
+
       };
       
       
