@@ -10042,7 +10042,9 @@
 				$menu, $li, $ul,
 				$element = this.$element,
 				$selector = $element.data('imeselector'),
-				liHeight = 32;
+				liHeight = 32,
+				moveLeft = 0,
+    			moveDown = 0;
 
 			// Need to extract a possible pinyin from the tail of 'input'
 			// K = consonant, N = nucleus
@@ -10108,16 +10110,54 @@
 
 			// Fill data into selection menu
 			for ( i = 0; i < selections.length; i++ ) {
-				$li = $( '<li><div class="image"><img src=""></img></div><div class="word"></div></li>' );
+				$li = $( '<li><div class="word"></div></li>' );
 				$li.appendTo( $ul )
 					.data( 'replacement', selections[i][0] );
 
 				// Insert matched word to menu
-				$('.word', $li).html( selections[i][0] + '</br><em>' + selections[i][1] + '</em>');
+				$('.word', $li).html( selections[i][0] + '<em>' + selections[i][1] + '</em>');
 
 				// Insert image to menu
 				// TODO: fetch proper image to menu
-				$('.image img', $li).attr('src', 'http://placehold.it/60x60');
+				$li.hover(function() {
+					var $elem = $('<div style="display:none;" class="popup-box"><img src=""/></div>');
+					$('img', $elem).attr('src', 'http://placehold.it/640x480');
+					$elem.appendTo('body').fadeIn();
+
+					moveLeft = $(this).outerWidth();
+			        moveDown = ($elem.outerHeight() / 2);
+				}, function() {
+					$('.popup-box').remove();
+				});
+
+				$li.mousemove(function(e) {
+					var target = '.popup-box';
+					var leftD = e.pageX + parseInt(moveLeft);
+			        var maxRight = leftD + $(target).outerWidth();
+			        var windowLeft = $(window).width() - 40;
+			        var windowRight = 0;
+			        var maxLeft = e.pageX - (parseInt(moveLeft) + $(target).outerWidth() + 20);
+			         
+			        if(maxRight > windowLeft && maxLeft > windowRight)
+			        {
+			            leftD = maxLeft;
+			        }
+			     
+			        var topD = e.pageY - parseInt(moveDown);
+			        var maxBottom = parseInt(e.pageY + parseInt(moveDown) + 20);
+			        var windowBottom = parseInt(parseInt($(document).scrollTop()) + parseInt($(window).height()));
+			        var maxTop = topD;
+			        var windowTop = parseInt($(document).scrollTop());
+
+			        if(maxBottom > windowBottom)
+			        {
+			            topD = windowBottom - $(target).outerHeight() - 20;
+			        } else if(maxTop < windowTop){
+			            topD = windowTop + 20;
+			        }
+
+			        $(target).css('top', topD).css('left', leftD);
+				});
 			}
 
 			// Bind scroll event
@@ -10148,11 +10188,12 @@
 				wrap: true
 			} ).click( function() {
 				var $input = $element,
-						val = $input.val(),
-						newReplacement = $(this).data('replacement'),
-						pos = val.lastIndexOf(replacement);
+					val = $input.val(),
+					newReplacement = $(this).data('replacement'),
+					pos = val.lastIndexOf(replacement);
 
 				// Reset
+				$('.popup-box').remove();
 				$( 'li', $ul ).navigate( 'destroy' );
 				$menu.remove();
 				$input.val( val.substr(0, pos) + newReplacement ).focus();
@@ -10317,3 +10358,4 @@
   
   };
 } )( jQuery );
+

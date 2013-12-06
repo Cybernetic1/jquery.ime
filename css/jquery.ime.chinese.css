@@ -24,25 +24,20 @@
 .ime-autocomplete li {
   min-width: 180px;
   cursor: pointer;
-  height: 60px;
+  height: 30px;
   line-height: 1;
 }
 
-.ime-autocomplete li .image img {
-  margin-right: 6px;
-  vertical-align: middle;
-  float: left;
-}
-
 .ime-autocomplete li .word {
-  margin-left: 66px;
-  padding-top: 18px;
   font-size: 1em;
+  padding: 0 6px;
+  line-height: 30px;
 }
 
 .ime-autocomplete li .word em {
   font-size: 0.85em;
   color: #999;
+  margin-left: 6px;
 }
 
 .ime-autocomplete li:active,
@@ -61,4 +56,18 @@
 
 .ime-autocomplete li .selection {
   padding: 6px;
+}
+
+.popup-box {
+  position: absolute;
+  z-index: 99999;
+  max-width: 400px;
+  max-height: 400px;
+  box-shadow: 6px 8px 32px rgba(0,0,0,0.32);
+  padding: 12px;
+}
+
+.popup-box img {
+  width: 100%;
+  height: auto;
 }
