@@ -10042,7 +10042,8 @@
 				$menu, $li, $ul,
 				$element = this.$element,
 				$selector = $element.data('imeselector'),
-				liHeight = 32,
+				ime = $('body').data('ime'),
+				liHeight = 30,
 				moveLeft = 0,
     			moveDown = 0;
 
@@ -10171,11 +10172,10 @@
 				// Restrict scroll position must be align to the top li
 				timer = setTimeout( function() {
 					scrollTop = $this.scrollTop();
-					newPos = index * liHeight;
 
 					// Scroll to new position
 					if((scrollTop % liHeight) > 0) {
-						$this.stop().animate( {scrollTop: newPos}, 'fast' );
+						$this.stop().animate( {scrollTop: (scrollTop - (scrollTop % liHeight))}, 'fast' );
 					}
 				}, 100 );
 			} );
@@ -10190,13 +10190,25 @@
 				var $input = $element,
 					val = $input.val(),
 					newReplacement = $(this).data('replacement'),
-					pos = val.lastIndexOf(replacement);
+					pos = ime.getCaretPosition( $element ),
+					startPos = pos[0],
+					endPos = pos[1],
+					input = ime.lastNChars(
+						$input.val() || $input.text(),
+						startPos,
+						7
+					);
 
 				// Reset
 				$('.popup-box').remove();
 				$( 'li', $ul ).navigate( 'destroy' );
 				$menu.remove();
-				$input.val( val.substr(0, pos) + newReplacement ).focus();
+
+				ime.replaceText($input, newReplacement, startPos - val.length - 1, endPos);
+
+				//replaceText( $element, replacement, startPos - input.length + 1, endPos );
+				//$input.val( val.substr(0, pos) + newReplacement ).focus();
+				$input.focus();
 			} );
 
 			// Replace input string and return

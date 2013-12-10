@@ -23,6 +23,9 @@
 		this.context = '';
 		this.selector = null;
 		this.addElement( element );
+		this.replaceText = replaceText;
+		this.getCaretPosition = getCaretPosition;
+		this.lastNChars = lastNChars
 	}
 
 	IME.prototype = {

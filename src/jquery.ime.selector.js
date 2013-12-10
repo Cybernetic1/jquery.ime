@@ -157,6 +157,7 @@
 				imeselector.$element.focus();
 
 				e.preventDefault();
+				return false;
 			} );
 
 			imeselector.$menu.on( 'click.ime', 'li.ime-im', function ( e ) {
