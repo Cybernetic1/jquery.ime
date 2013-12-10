@@ -67,19 +67,63 @@ We can use (1 - <em>d</em>) to represent the matching score.<br>
 </p>
 
 <p>
-Each character <em>c</em> also has an occurrence frequency, <em>f</em>.  The distribution of <em>f</em> follows exponential decay, so it has a very long tail.  After taking the logorithm it becomes more "manageable".<br>
+Each character <em>c</em> also has an occurrence frequency, <em>f</em>.  The distribution of <em>f</em> follows the famous <a href="http://en.wikipedia.org/wiki/Zipf's_law" title="Zipf's Law">Zipf's Law</a>, which says that the most frequent char will occur approximately twice as often as the second most frequent char, three times as often as the third most frequent char, etc.  In other words, if we plot log(rank order) against log(frequency), we get a straight line.<br>
 </p>
 
 <p>
-We need to <em>combine</em> the matching score with frequency, perhaps via:<br>
+Now we have 2 things:  one is the frequecy or frequency ranking, the other is the distance measure for spelling errors.  We need to somehow unify the two measures.  There may be more than one way to do it.<br>
+</p>
+
+<p>
+Earlier I had used a somewhat <em>ad hoc</em> formula:<br>
 <div style='padding-left: 30pt'>
 <img src="./README.fuzzy-mandarin-pinyin/equation007.png" alt=""><br>
 </div>
-where <em>C,D</em> are parametric constants the user can tweak.  The purpose of <em>C</em> is to make the factor positive.  If the factor <img src="./README.fuzzy-mandarin-pinyin/equation008.png" alt="">, distant spellings will have low ranking (this is suitable for more experienced users, who usually spell correctly), otherwise the influence of <em>f</em> would be bigger, more misspelled characters will be displayed instead of rare (low-frequency) ones.<br>
+where <em>C,D</em> are parametric constants the user can tweak.  The purpose of <em>C</em> is to make the factor positive.  If the factor <img src="./README.fuzzy-mandarin-pinyin/equation008.png" alt="">, distant spellings will have low ranking (this is suitable for more experienced users, who usually spell correctly), otherwise the influence of <em>f</em> would be bigger, more misspelled characters will be displayed instead of rare (low-frequency) ones. But this is not a very good idea, as it lacks any deep mathematical justification.<br>
+</p>
+
+<h4>Bayesian reasoning</h4>
+
+<p>
+A better approach may be Bayesian reasoning.  I noticed that the frequency can be regarded as the "prior" probability of a character occurring in any text, without further information.  We are given the "observation / data" which is the (possibly erroneous) spelling given by the user, and we want to use this observation to guess what is the user's intended character, ie our "hypothesis".<br>
 </p>
 
 <p>
-Algorithm:  we can just scan through the entire set of characters (which is on the order of 10K) with everyone mixed together, calculate the distance of each char with our input char, then calculate the new ranking.  Of course the lower ranking ones will be cut off.<br>
+An easy way to understand and remember Bayes' Law is via this basic rule in probability:<br>
+<div style='padding-left: 30pt'>
+<img src="./README.fuzzy-mandarin-pinyin/equation010.png" alt=""><br>
+</div>
+where (A, B) denotes "A and B" both being true.  Upon rearranging, this gives the familiar form of Bayes' Law:<br>
+<div style='padding-left: 30pt'>
+<img src="./README.fuzzy-mandarin-pinyin/equation009.png" alt="">.<br>
+</div>
+The profound usefulness of Bayesian reasoning comes from the fact that the roles of A and B are not symmetric as they appear in the formula.  We denote H as the hypothesis (one among many), by which we seek to explain the observation or data, D.  Then:<br>
+<div style='padding-left: 30pt'>
+<img src="./README.fuzzy-mandarin-pinyin/equation011.png" alt=""><br>
+</div>
+where P(H|D) is the probability that this particular hypothesis is true given the observation, P(H) is the prior probability of this hypothesis (our initial belief in this hypothesis without any observation), P(D) is the prior probability of getting this particular observation. Bayesian reaoning is powerful because P(H|D) is usually difficult to compute directly, while P(D|H) is usually much easier to compute.  The reason behind this is that we usually understand better the mechanism by which a hypothesis generates an observation, rather than the other way around.  That is because our minds work by using hypotheses to <em>explain</em> observations, and we have explicit knowledge of this mechanism.<br>
+</p>
+
+<p>
+In our case the observation D is the spelling provided by the user.  The hypothesis H is the character intended by the user.  It is not easy to guess what is the intended character given the possibly erroneous spelling, but it is somwhat easier if we know what is the intended character, and guess the ways in which it can be misspelled — since we already know its correct spelling, and our distance metric gives how far it is from the correct form;  we can assign a conditional probability, P(D|H) = P(spelling | character), as a function of the error distance.<br>
+</p>
+
+<p>
+P(D|H) may be given by (1.0 - error distance), since we have confined the distance in [0,1].  But we need to avoid the extremal probability values of 0 and 1.  (However, conditional probabilities do not need to be normalized to sum to 1.  I am still thinking on whether P(D|H) must obey further constraints...)<br>
+</p>
+
+<p>
+P(H) is the prior probability of a char, this is same as the character frequency.<br>
+</p>
+
+<p>
+P(D) is the prior probability of a spelling.  We can deduce this from the character frequencies, converting the characters to their correct spellings, and add up.<br>
+</p>
+
+<h4>Algorithm</h4>
+
+<p>
+We can just scan through the entire set of characters (which is on the order of 10K) with everyone mixed together, calculate the distance of each char with our input char, then calculate the new ranking.  Of course the lower ranking ones will be cut off.<br>
 </p>
 
 <h4>Distance between 2 consonants / nuclei</h4>
