@@ -114,8 +114,7 @@
 
 			// No matches, return the input
 			return input;
-		},
-
+		}
 		keyup: function ( e ) {
 			if ( e.which === 16 ) { // shift key
 				this.shifted = false;

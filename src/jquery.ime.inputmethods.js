@@ -94,6 +94,10 @@
 			name: 'YKY中文',
 			source: 'rules/cn/cn-transliteration.js'
 		},
+		'conkey': {
+			name: 'concept keyboard',
+			source: 'rules/conkey/conkey.js'
+		},
 		'cv-cyr-altgr': {
 			name: 'Чăвашла (AltGr)',
 			source: 'rules/cv/cv-cyr-altgr.js'
@@ -634,6 +638,10 @@
 		'cn': {
 			autonym: 'Chinese',
 			inputmethods: [ 'cn' ]
+		},
+		'conkey': {
+			autonym: 'Conkey',
+			inputmethods: [ 'conkey' ]
 		},
 		'cv': {
 			autonym: 'Чăвашла',
