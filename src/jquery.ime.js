@@ -18,6 +18,7 @@
 		this.options = $.extend( {}, $.ime.defaults, options );
 		this.active = false;
 		this.shifted = false;
+		this.crtlKey = false;
 		this.inputmethod = null;
 		this.language = null;
 		this.context = '';
@@ -118,12 +119,24 @@
 		keyup: function ( e ) {
 			if ( e.which === 16 ) { // shift key
 				this.shifted = false;
+			} else if ( e.which ===  17 && this.ctrlKey) { // 17 = ctrl key
+				// Detect if 'ctrl' key has been pressed and released without
+				// any other key.  In other words, "ctrl-null"
+				this.ctrlKey = false;
+				// show / hide context menu
+				this.inputmethod.showMenu();
 			}
 		},
 
 		keydown: function ( e ) {
 			if ( e.which === 16 ) { // shift key
 				this.shifted = true;
+			}
+
+			if ( this.ctrlKey ) {
+				// Another key is pressed after 'ctrl' is pressed
+				// Act as if 'ctrl' has not been pressed
+				this.ctrlKey = false;
 			}
 		},
 

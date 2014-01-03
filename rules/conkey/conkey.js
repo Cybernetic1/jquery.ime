@@ -15,6 +15,16 @@
 			['d','e',0,'的',4.094325318]
 		],
 
+		// Hide or show context menu
+		showMenu: function() {
+			var $elem = $('<div style="display:none;" class="popup-box"><img src=""/></div>');
+			$('img', $elem).attr('src', 'http://placehold.it/640x480');
+			$elem.appendTo('body').fadeIn();
+
+			moveLeft = $(this).outerWidth();
+			moveDown = ($elem.outerHeight() / 2);
+		}
+
 		// This function is specially for Concept keyboard
 		patterns: function( input, context ) {
 
@@ -34,18 +44,13 @@
     			moveDown = 0;
 
 			// Todo:
-			// 0. How to store the context menu?
+			// 0. How to store the context menu? (Joseph)
 			// 1. need to display menu even before any key is struck
-			//		- but when to hide menu?
-			//		- perhaps Ctrl key toggles menu?
+			//		- Ctrl key toggles menu
+			//		- when to hide menu?
 			// 2. after a key is struck, display a sub-menu
 			//		- do we keep the higher-level menus on display?
 			// 3. after a number key is struck, do replacement
-
-			// Need to extract a possible pinyin from the tail of 'input'
-			// k_n = input.match('(b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|w|y)?(a|ai|an|ang|ao|e|ei|en|eng|er|i|ia|ian|iang|iao|ie|in|ing|io|iong|iu|o|ong|ou|u|ua|uai|uan|uang|ue|ui|un|uo|ü|üan|ün) $');
-
-			// if (k_n === null) { return input; }
 
 			// Find fuzzy match
 			for ( i = 0; i < pinyinList.length; i++ ) {
@@ -120,7 +125,7 @@
 					$elem.appendTo('body').fadeIn();
 
 					moveLeft = $(this).outerWidth();
-			        moveDown = ($elem.outerHeight() / 2);
+			      moveDown = ($elem.outerHeight() / 2);
 				}, function() {
 					$('.popup-box').remove();
 				});
