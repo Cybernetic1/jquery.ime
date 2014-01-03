@@ -18,7 +18,7 @@
 		this.options = $.extend( {}, $.ime.defaults, options );
 		this.active = false;
 		this.shifted = false;
-		this.ctrlKey = false;
+		this.ctrlNull = false;
 		this.inputmethod = null;
 		this.language = null;
 		this.context = '';
@@ -26,7 +26,7 @@
 		this.addElement( element );
 		this.replaceText = replaceText;
 		this.getCaretPosition = getCaretPosition;
-		this.lastNChars = lastNChars
+		this.lastNChars = lastNChars;
 	}
 
 	IME.prototype = {
@@ -43,13 +43,13 @@
 			element.on( 'enable.ime', $.proxy( this.enable, this ) );
 			element.on( 'disable.ime', $.proxy( this.disable, this ) );
 		},
-		
+
 		/**
 		 * Add element to IME
 		 */
 		addElement: function ( element ) {
 			var $element = $( element );
-			
+
 			this.selector = $element.imeselector( this.options );
 			this.listen( $element );
 		},
@@ -86,7 +86,7 @@
 			if ( $.isFunction( patterns ) ) {
 				return patterns.call( this, input, context );
 			}
-			
+
 			// debugger;
 
 			for ( i = 0; i < patterns.length; i++ ) {
@@ -119,10 +119,9 @@
 		keyup: function ( e ) {
 			if ( e.which === 16 ) { // shift key
 				this.shifted = false;
-			} else if ( e.which ===  17 && this.ctrlKey) { // 17 = ctrl key
-				// Detect if 'ctrl' key has been pressed and released without
-				// any other key.  In other words, "ctrl-null"
-				this.ctrlKey = false;
+			} else if ( e.which ===  17 && this.ctrlNull) { // 17 = ctrl key
+				// If we're here that means 'ctrl' key has been pressed and released without any other key.  In other words, "ctrl-null"
+				this.ctrlNull = false;
 				// show / hide context menu
 				this.inputmethod.showMenu();
 			}
@@ -132,11 +131,11 @@
 			if ( e.which === 16 ) { // shift key
 				this.shifted = true;
 			} else if ( e.which === 17) { // ctrl key
-				this.ctrlKey = true;
-			} else if ( this.ctrlKey ) {
+				this.ctrlNull = true;
+			} else if ( this.ctrlNull ) {
 				// Another key is pressed after 'ctrl' is pressed
-				// Act as if 'ctrl' has not been pressed
-				this.ctrlKey = false;
+				// This cancels the status of ctrlNull
+				this.ctrlNull = false;
 			}
 		},
 
@@ -421,7 +420,7 @@
 				ime = new IME( this, options );
 				$('body').data( 'ime', ime );
 			}
-			
+
 			if ( !data ) {
 				$this.data( 'ime', ime );
 				ime.addElement(this);

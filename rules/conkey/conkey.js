@@ -18,7 +18,7 @@
 		// Hide or show context menu
 		showMenu: function() {
 			console.log("Trying to show context menu.");
-			
+
 			var $elem = $('<div style="display:none;" class="popup-box"><img src=""/></div>');
 			$('img', $elem).attr('src', 'http://placehold.it/640x480');
 			$elem.appendTo('body').fadeIn();
@@ -49,7 +49,6 @@
 			// 0. How to store the context menu? (Joseph)
 			// 1. need to display menu even before any key is struck
 			//		- Ctrl key toggles menu
-			//		- when to hide menu?
 			// 2. after a key is struck, display a sub-menu
 			//		- do we keep the higher-level menus on display?
 			// 3. after a number key is struck, do replacement
@@ -91,6 +90,8 @@
 			// the top of selections
 			replacement = selections[0][0];
 			*/
+
+			selections = ['1a1', '2b2', '3c3'];
 
 			// Create selection menu
 			$menu = $( '.ime-autocomplete', $selector.$imeSetting );
@@ -189,6 +190,8 @@
 				wrap: true
 			} ).click( function() {
 				var $input = $element,
+					// The character is already replaced with 'replacement'
+					// so we have to replace the replacement with a new one
 					val = $input.val(),
 					newReplacement = $(this).data('replacement'),
 					pos = val.lastIndexOf(replacement);
@@ -201,7 +204,7 @@
 			} );
 
 			// Replace input string and return
-			return input.replace( k_n[0], replacement );
+			return input.replace( 'k_n[0]', 'replacement' );
 		}
 
 	};
