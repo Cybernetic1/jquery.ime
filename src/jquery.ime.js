@@ -18,7 +18,7 @@
 		this.options = $.extend( {}, $.ime.defaults, options );
 		this.active = false;
 		this.shifted = false;
-		this.crtlKey = false;
+		this.ctrlKey = false;
 		this.inputmethod = null;
 		this.language = null;
 		this.context = '';

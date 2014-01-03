@@ -21,9 +21,9 @@
 			$('img', $elem).attr('src', 'http://placehold.it/640x480');
 			$elem.appendTo('body').fadeIn();
 
-			moveLeft = $(this).outerWidth();
-			moveDown = ($elem.outerHeight() / 2);
-		}
+			var	moveLeft = $(this).outerWidth(),
+					moveDown = ($elem.outerHeight() / 2);
+		},
 
 		// This function is specially for Concept keyboard
 		patterns: function( input, context ) {
@@ -41,7 +41,7 @@
 				$selector = $element.data('imeselector'),
 				liHeight = 32,
 				moveLeft = 0,
-    			moveDown = 0;
+				moveDown = 0;
 
 			// Todo:
 			// 0. How to store the context menu? (Joseph)
@@ -125,38 +125,36 @@
 					$elem.appendTo('body').fadeIn();
 
 					moveLeft = $(this).outerWidth();
-			      moveDown = ($elem.outerHeight() / 2);
+					moveDown = ($elem.outerHeight() / 2);
 				}, function() {
 					$('.popup-box').remove();
 				});
 
 				$li.mousemove(function(e) {
-					var target = '.popup-box';
-					var leftD = e.pageX + parseInt(moveLeft);
-			        var maxRight = leftD + $(target).outerWidth();
-			        var windowLeft = $(window).width() - 40;
-			        var windowRight = 0;
-			        var maxLeft = e.pageX - (parseInt(moveLeft) + $(target).outerWidth() + 20);
+					var target = '.popup-box',
+						leftD = e.pageX + parseInt(moveLeft),
+						maxRight = leftD + $(target).outerWidth(),
+						windowLeft = $(window).width() - 40,
+						windowRight = 0,
+						maxLeft = e.pageX - (parseInt(moveLeft) + $(target).outerWidth() + 20);
 
-			        if(maxRight > windowLeft && maxLeft > windowRight)
-			        {
-			            leftD = maxLeft;
-			        }
+					if (maxRight > windowLeft && maxLeft > windowRight) {
+						leftD = maxLeft;
+					}
 
-			        var topD = e.pageY - parseInt(moveDown);
-			        var maxBottom = parseInt(e.pageY + parseInt(moveDown) + 20);
-			        var windowBottom = parseInt(parseInt($(document).scrollTop()) + parseInt($(window).height()));
-			        var maxTop = topD;
-			        var windowTop = parseInt($(document).scrollTop());
+					var topD = e.pageY - parseInt(moveDown),
+						maxBottom = parseInt(e.pageY + parseInt(moveDown) + 20),
+						windowBottom = parseInt(parseInt($(document).scrollTop()) + parseInt($(window).height())),
+						maxTop = topD,
+						windowTop = parseInt($(document).scrollTop());
 
-			        if(maxBottom > windowBottom)
-			        {
-			            topD = windowBottom - $(target).outerHeight() - 20;
-			        } else if(maxTop < windowTop){
-			            topD = windowTop + 20;
-			        }
+					if(maxBottom > windowBottom) {
+							topD = windowBottom - $(target).outerHeight() - 20;
+					} else if(maxTop < windowTop) {
+							topD = windowTop + 20;
+					}
 
-			        $(target).css('top', topD).css('left', leftD);
+					$(target).css('top', topD).css('left', leftD);
 				});
 			}
 
@@ -204,7 +202,7 @@
 		}
 
 	};
-	$.ime.register( cn );
+	$.ime.register( conkey );
 }( jQuery ) );
 
 /*
@@ -216,146 +214,147 @@
  */
 
 (function($){
-	'use strict'
+	'use strict';
 
-  var handleKeyDown;
-  var handleMouseOver;
-  var navigate;
-  var options;
-  var $current;
-  var $collection;
-  var defaults = {
-   mouse: true,
-   activeClass: 'active',
-   onSelect: function(){},
-   onFocus: function(){},
-   keys: {
-    up: 38,
-    down: 40,
-    left: 37,
-    right: 39,
-    select: 13
-   }
-  };
+	var handleKeyDown,
+		handleMouseOver,
+		navigate,
+		options,
+		$current,
+		$collection,
 
-  var methods = {
-    init : function(o){
+	defaults = {
+	mouse: true,
+	activeClass: 'active',
+	onSelect: function(){},
+	onFocus: function(){},
+	keys: {
+		up: 38,
+		down: 40,
+		left: 37,
+		right: 39,
+		select: 13
+		}
+	},
 
-      options = $.extend(defaults, o);
-      $current = this.first().addClass(options.activeClass);
-      $collection = this;
+	methods = {
+		init : function(o){
 
-      handleKeyDown = function(e){
+		options = $.extend(defaults, o);
+		$current = this.first().addClass(options.activeClass);
+		$collection = this;
 
-        if(!e){ var e = window.event; }
+		handleKeyDown = function(e){
 
-	      switch(e.keyCode){
-	        case options.keys.up:
-	          navigate(0,-1);
-	          break;
-	        case options.keys.down:
-	          navigate(0,1);
-	          break;
-	        case options.keys.left:
-	          navigate(-1,0);
-	          break;
-	        case options.keys.right:
-	          navigate(1,0);
-	          break;
-	        case options.keys.select:
-	          $current.trigger('click');
-	          break;
-	      }
+			if(!e){ var e = window.event; }
 
-	      e.preventDefault();
+			switch(e.keyCode){
+				case options.keys.up:
+					navigate(0,-1);
+					break;
+				case options.keys.down:
+					navigate(0,1);
+					break;
+				case options.keys.left:
+					navigate(-1,0);
+					break;
+				case options.keys.right:
+					navigate(1,0);
+					break;
+				case options.keys.select:
+					$current.trigger('click');
+					break;
+			}
 
-      };
+			e.preventDefault();
 
-
-      handleMouseOver = function(){
-        $('.'+options.activeClass).removeClass(options.activeClass).trigger('blur');
-        $current = $(this).addClass(options.activeClass).trigger('focus');
-      };
+		};
 
 
-      navigate = function(x, y) {
-
-        var delta = x+y;
-        var $closest = $current;
-        var $difference = 0;
-        var a,b,d;
-
-        $collection.each(function(){
-          a = $(this);
-
-          // ignore the current node
-          if(a === $current) return;
-          if(x !== 0) d = parseInt(a.position().left - $current.position().left);
-          if(y !== 0) d = parseInt(a.position().top - $current.position().top);
-
-          // node not in the right direction, drop out
-          if(!(d > 0 && delta > 0) && !(d < 0 && delta < 0)) return;
-
-          // distance calc would normally require sqrt but can be left out as we are only comparing.
-          b = Math.pow($current.position().left-a.position().left,2)+Math.pow($current.position().top-a.position().top,2);
-
-          // closest node so far?
-          if(b < $difference || $difference === 0){
-            $closest = a; $difference = b;
-          }
-        });
-
-        // no more nodes in this direction
-        if(options.wrap && $current === $closest) return;
-
-        // trigger node as active
-        $current.removeClass(options.activeClass);
-        $current.trigger('blur');
-        $closest.addClass(options.activeClass);
-        $closest.trigger('focus');
-        $current = $closest;
-        options.onFocus.call($current);
-      }
+		handleMouseOver = function() {
+			$('.'+options.activeClass).removeClass(options.activeClass).trigger('blur');
+			$current = $(this).addClass(options.activeClass).trigger('focus');
+		};
 
 
-      // bind key and mouse events if required
-      $(document).bind('keydown', handleKeyDown);
-      $collection.bind('click', options.onSelect);
-      if(options.mouse) $collection.bind('mouseover', handleMouseOver);
+		navigate = function(x, y) {
 
-      return this;
-    },
-    destroy : function(){
+			var delta = x+y,
+				$closest = $current,
+				$difference = 0,
+				a,b,d;
 
-      // if bound to a collection
-      if($collection){
+			$collection.each(function() {
+				a = $(this);
 
-        // unbind all plugin event handlers
-        $(document).unbind('keydown', handleKeyDown);
-        $collection.unbind('mouseover', handleMouseOver);
-        $collection.unbind('click', options.onSelect);
-        $collection.removeClass(options.activeClass);
+			// ignore the current node
+			if (a === $current) { return; }
+			if (x !== 0) { d = parseInt(a.position().left - $current.position().left); }
+			if (y !== 0) { d = parseInt(a.position().top - $current.position().top); }
 
-        // recover memory
-        options = $current = $collection = null;
-      }
+			// node not in the right direction, drop out
+			if (!(d > 0 && delta > 0) && !(d < 0 && delta < 0)) { return; }
 
-      return this;
-    }
-  };
+			// distance calc would normally require sqrt but can be left out as we are only comparing.
+			b = Math.pow($current.position().left-a.position().left,2)+Math.pow($current.position().top-a.position().top,2);
+
+			// closest node so far?
+			if(b < $difference || $difference === 0){
+				$closest = a; $difference = b;
+				}
+			});
+
+			// no more nodes in this direction
+			if(options.wrap && $current === $closest) { return; }
+
+			// trigger node as active
+			$current.removeClass(options.activeClass);
+			$current.trigger('blur');
+			$closest.addClass(options.activeClass);
+			$closest.trigger('focus');
+			$current = $closest;
+			options.onFocus.call($current);
+		};
 
 
-  $.fn.navigate = function( method ) {
+		// bind key and mouse events if required
+		$(document).bind('keydown', handleKeyDown);
+		$collection.bind('click', options.onSelect);
+		if(options.mouse) { $collection.bind('mouseover', handleMouseOver); }
 
-    // Method calling logic
-    if ( methods[method] ) {
-      return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-    } else if ( typeof method === 'object' || ! method ) {
-      return methods.init.apply( this, arguments );
-    } else {
-      $.error( 'Method ' +  method + ' does not exist on jQuery.navigate' );
-    }
+		return this;
+	},
+	destroy : function(){
 
-  };
+		// if bound to a collection
+		if($collection){
+
+		// unbind all plugin event handlers
+		$(document).unbind('keydown', handleKeyDown);
+		$collection.unbind('mouseover', handleMouseOver);
+		$collection.unbind('click', options.onSelect);
+		$collection.removeClass(options.activeClass);
+
+		// recover memory
+		options = $current = $collection = null;
+		}
+
+		return this;
+		}
+	};
+
+
+	$.fn.navigate = function( method ) {
+
+	// Method calling logic
+	if ( methods[method] ) {
+		return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
+		} else if ( typeof method === 'object' || ! method ) {
+		return methods.init.apply( this, arguments );
+		} else {
+		$.error( 'Method ' +  method + ' does not exist on jQuery.navigate' );
+		}
+
+	};
 } )( jQuery );
 
