@@ -17,6 +17,8 @@
 
 		// Hide or show context menu
 		showMenu: function() {
+			console.log("Trying to show context menu.");
+			
 			var $elem = $('<div style="display:none;" class="popup-box"><img src=""/></div>');
 			$('img', $elem).attr('src', 'http://placehold.it/640x480');
 			$elem.appendTo('body').fadeIn();
@@ -52,7 +54,7 @@
 			//		- do we keep the higher-level menus on display?
 			// 3. after a number key is struck, do replacement
 
-			// Find fuzzy match
+			/* Find fuzzy match
 			for ( i = 0; i < pinyinList.length; i++ ) {
 				rule = pinyinList[i];
 
@@ -88,6 +90,7 @@
 
 			// the top of selections
 			replacement = selections[0][0];
+			*/
 
 			// Create selection menu
 			$menu = $( '.ime-autocomplete', $selector.$imeSetting );

@@ -131,9 +131,9 @@
 		keydown: function ( e ) {
 			if ( e.which === 16 ) { // shift key
 				this.shifted = true;
-			}
-
-			if ( this.ctrlKey ) {
+			} else if ( e.which === 17) { // ctrl key
+				this.ctrlKey = true;
+			} else if ( this.ctrlKey ) {
 				// Another key is pressed after 'ctrl' is pressed
 				// Act as if 'ctrl' has not been pressed
 				this.ctrlKey = false;
