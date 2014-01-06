@@ -24,74 +24,17 @@
 					moveDown = ($elem.outerHeight() / 2);
 		},
 
-		// This function is specially for Concept keyboard
-		patterns: function( input, context ) {
+		createMenu: function($element) {
+			var $menu, $li, $ul, i,
+			$selector = $( 'body' ).data( 'imeselector' ),
+			liHeight = 32,
+			moveLeft = 0,
+			moveDown = 0;
 
-			// *************** Local Functions ****************
-
-			// ************ Main function begins here **************
-
-			var i, replacement, rule, timer,
-				unsorted = [],
-				k_n, dk, dn, d, score, // beta = 30.0,
-				$menu, $li, $ul,
-				$element = this.$element,
-				$selector = $element.data('imeselector'),
-				liHeight = 32,
-				moveLeft = 0,
-				moveDown = 0;
-
-			// Todo:
-			// 0. How to store the context menu? (Joseph)
-			// 1. need to display menu even before any key is struck
-			//		- Ctrl key toggles menu
-			// 2. after a key is struck, display a sub-menu
-			//		- do we keep the higher-level menus on display?
-			// 3. after a number key is struck, do replacement
-
-			/* Find fuzzy match
-			for ( i = 0; i < pinyinList.length; i++ ) {
-				rule = pinyinList[i];
-
-				// 2. calculate distance between consonants
-				dk = distance_k( k_n[1], rule[0] );
-
-				// 3. calculate distance between nuclei
-				dn = distance_n( k_n[2], rule[1] );
-
-				// 4. calculate overall distance
-				d = 0.5 * dk + 0.5 * dn;
-
-				// 5. calculate score
-				// The number '19' in denominator can be tweaked.
-				score = (1.0 - d) * (Math.log( rule[4] ) + 16) / 19;
-
-				unsorted.push( [rule[3], rule[0] + rule[1], dk, dn, score.toFixed(5)] );
-
-				//if (conkey.selections.length > 100)
-				//	{ break; }
-			}
-
-			//return input;
-			// console.log("conkey.selections = " + conkey.selections);
-
-			// Sort conkey.selections by score
-			unsorted.sort( function(a, b) {
-				return (b[4] - a[4]);
-			} );
-
-			// Get only the top 100 suggestions
-			conkey.selections = unsorted.slice( 0, 100 );
-
-			// the top of conkey.selections
-			replacement = conkey.selections[0][0];
-			*/
-
-			// Create selection menu
 			$menu = $( '.ime-autocomplete', $selector.$imeSetting );
 
 			// Initialize selection menu
-			if ( !$menu.length ) {
+			if ( $menu != null && !$menu.length ) {
 				$menu = $( '<div class="ime-autocomplete"></div>' );
 				$ul = $( '<ul></ul>' );
 				$ul.appendTo( $menu );
@@ -156,29 +99,9 @@
 				});
 			}
 
-			// Bind scroll event
-			$menu.scroll( function(e) {
-				var $this, scrollTop, newPos, index, $li;
-
-				$this = $( this );
-				// Clear all timer
-				clearTimeout( timer );
-
-				// Restrict scroll position must be align to the top li
-				timer = setTimeout( function() {
-					scrollTop = $this.scrollTop();
-					newPos = index * liHeight;
-
-					// Scroll to new position
-					if((scrollTop % liHeight) > 0) {
-						$this.stop().animate( {scrollTop: newPos}, 'fast' );
-					}
-				}, 100 );
-			} );
-
 			// Stop ime.selector timer to prevent ime menu hiding
 			$selector.stopTimer();
-
+			console.log($element);
 			// Initialize jquery.navigate to make menu items keyboard-navigable
 			$('ul li', $menu).not('.nokeyboard').navigate( {
 				wrap: true
@@ -196,6 +119,71 @@
 				$menu.remove();
 				$input.val( val.substr(0, pos) + newReplacement ).focus();
 			} );
+		},
+
+		// This function is specially for Concept keyboard
+		patterns: function( input, context ) {
+
+			// *************** Local Functions ****************
+
+			// ************ Main function begins here **************
+
+			// return empty string if typed number 0-9
+			if(input.match(/^[0-9]$/)) return '';
+
+			/*var i, replacement, rule, timer,
+				unsorted = [],
+				k_n, dk, dn, d, score, // beta = 30.0;
+			*/
+
+			// Todo:
+			// 0. How to store the context menu? (Joseph)
+			// 1. need to display menu even before any key is struck
+			//		- Ctrl key toggles menu
+			// 2. after a key is struck, display a sub-menu
+			//		- do we keep the higher-level menus on display?
+			// 3. after a number key is struck, do replacement
+
+			/* Find fuzzy match
+			for ( i = 0; i < pinyinList.length; i++ ) {
+				rule = pinyinList[i];
+
+				// 2. calculate distance between consonants
+				dk = distance_k( k_n[1], rule[0] );
+
+				// 3. calculate distance between nuclei
+				dn = distance_n( k_n[2], rule[1] );
+
+				// 4. calculate overall distance
+				d = 0.5 * dk + 0.5 * dn;
+
+				// 5. calculate score
+				// The number '19' in denominator can be tweaked.
+				score = (1.0 - d) * (Math.log( rule[4] ) + 16) / 19;
+
+				unsorted.push( [rule[3], rule[0] + rule[1], dk, dn, score.toFixed(5)] );
+
+				//if (conkey.selections.length > 100)
+				//	{ break; }
+			}
+
+			//return input;
+			// console.log("conkey.selections = " + conkey.selections);
+
+			// Sort conkey.selections by score
+			unsorted.sort( function(a, b) {
+				return (b[4] - a[4]);
+			} );
+
+			// Get only the top 100 suggestions
+			conkey.selections = unsorted.slice( 0, 100 );
+
+			// the top of conkey.selections
+			replacement = conkey.selections[0][0];
+			*/
+
+			// Create selection menu
+			conkey.createMenu(this.$element);
 
 			// Replace input string and return
 			return input.replace( 'k_n[0]', 'replacement' );
@@ -216,6 +204,7 @@
 		success: function( data ) {
 			if(data.results.length)
 				conkey.selections = data.results;
+				conkey.createMenu($('input:focus, textarea:focus'));
 		}
 	});
 
