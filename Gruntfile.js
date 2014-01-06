@@ -105,10 +105,6 @@ module.exports = function ( grunt ) {
 		csslint : {
 			file: [ 'css/**/*.css' ]
 		},
-		watch: {
-			files: '<config:lint.files>',
-			tasks: 'lint qunit'
-		},
 		jshint: {
 			options: JSON.parse( grunt.file.read( '.jshintrc' )
 				.replace( /\/\*(?:(?!\*\/)[\s\S])*\*\//g, '' ).replace( /\/\/[^\n\r]*/g, '' ) ),

@@ -10,10 +10,7 @@
 		author: 'YKY, Joseph Cheng',
 		license: 'GPLv3',
 		version: '1.0',
-		// Conceptually organized menu
-		conceptMenu: [
-			['d','e',0,'的',4.094325318]
-		],
+		selections: [],
 
 		// Hide or show context menu
 		showMenu: function() {
@@ -35,8 +32,7 @@
 			// ************ Main function begins here **************
 
 			var i, replacement, rule, timer,
-				conceptMenu = this.inputmethod.conceptMenu,
-				unsorted = [], selections = [],
+				unsorted = [],
 				k_n, dk, dn, d, score, // beta = 30.0,
 				$menu, $li, $ul,
 				$element = this.$element,
@@ -72,26 +68,24 @@
 
 				unsorted.push( [rule[3], rule[0] + rule[1], dk, dn, score.toFixed(5)] );
 
-				//if (selections.length > 100)
+				//if (conkey.selections.length > 100)
 				//	{ break; }
 			}
 
 			//return input;
-			// console.log("Selections = " + selections);
+			// console.log("conkey.selections = " + conkey.selections);
 
-			// Sort selections by score
+			// Sort conkey.selections by score
 			unsorted.sort( function(a, b) {
 				return (b[4] - a[4]);
 			} );
 
 			// Get only the top 100 suggestions
-			selections = unsorted.slice( 0, 100 );
+			conkey.selections = unsorted.slice( 0, 100 );
 
-			// the top of selections
-			replacement = selections[0][0];
+			// the top of conkey.selections
+			replacement = conkey.selections[0][0];
 			*/
-
-			selections = ['1a1', '2b2', '3c3'];
 
 			// Create selection menu
 			$menu = $( '.ime-autocomplete', $selector.$imeSetting );
@@ -113,13 +107,13 @@
 			}
 
 			// Fill data into selection menu
-			for ( i = 0; i < selections.length; i++ ) {
+			for ( i = 0; i < conkey.selections.length; i++ ) {
 				$li = $( '<li><div class="word"></div></li>' );
 				$li.appendTo( $ul )
-					.data( 'replacement', selections[i][0] );
+					.data( 'replacement', conkey.selections[i]['name'] );
 
 				// Insert matched word to menu
-				$('.word', $li).html( selections[i][0] + '<em>' + selections[i][1] + '</em>');
+				$('.word', $li).html( conkey.selections[i]['name']);
 
 				// Insert image to menu
 				// TODO: fetch proper image to menu
@@ -208,7 +202,23 @@
 		}
 
 	};
+
 	$.ime.register( conkey );
+
+	// Call server to get all root level items
+	$.ajax({
+		type: 'GET',
+		url: 'http://localhost:3000/dict',
+		async: false,
+    jsonpCallback: 'jsonCallback',
+    contentType: "application/json",
+    dataType: 'jsonp',
+		success: function( data ) {
+			if(data.results.length)
+				conkey.selections = data.results;
+		}
+	});
+
 }( jQuery ) );
 
 /*
