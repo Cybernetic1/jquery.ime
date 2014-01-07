@@ -101,7 +101,7 @@
 
 			// Stop ime.selector timer to prevent ime menu hiding
 			$selector.stopTimer();
-			console.log($element);
+
 			// Initialize jquery.navigate to make menu items keyboard-navigable
 			$('ul li', $menu).not('.nokeyboard').navigate( {
 				wrap: true
@@ -186,7 +186,7 @@
 			conkey.createMenu(this.$element);
 
 			// Replace input string and return
-			return input.replace( 'k_n[0]', 'replacement' );
+			return input;
 		}
 
 	};
@@ -204,7 +204,7 @@
 		success: function( data ) {
 			if(data.results.length)
 				conkey.selections = data.results;
-				conkey.createMenu($('input:focus, textarea:focus'));
+				conkey.createMenu($('input:focus, textarea:focus').first());
 		}
 	});
 
