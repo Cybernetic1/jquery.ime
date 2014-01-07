@@ -24,7 +24,7 @@
 					moveDown = ($elem.outerHeight() / 2);
 		},
 
-		createMenu: function($element) {
+		createMenu: function($element, replacement) {
 			var $menu, $li, $ul, i,
 			$selector = $( 'body' ).data( 'imeselector' ),
 			liHeight = 32,
@@ -53,7 +53,8 @@
 			for ( i = 0; i < conkey.selections.length; i++ ) {
 				$li = $( '<li><div class="word"></div></li>' );
 				$li.appendTo( $ul )
-					.data( 'replacement', conkey.selections[i]['name'] );
+					.data( 'replacement', conkey.selections[i]['name'] )
+					.data( 'id', conkey.selections[i]['_id'] );
 
 				// Insert matched word to menu
 				$('.word', $li).html( conkey.selections[i]['name']);
@@ -111,13 +112,33 @@
 					// so we have to replace the replacement with a new one
 					val = $input.val(),
 					newReplacement = $(this).data('replacement'),
+					id = $(this).data('id'),
+					pos = val.length || 0;
+
+
+				if(replacement != null)
 					pos = val.lastIndexOf(replacement);
 
 				// Reset
 				$('.popup-box').remove();
 				$( 'li', $ul ).navigate( 'destroy' );
 				$menu.remove();
+
 				$input.val( val.substr(0, pos) + newReplacement ).focus();
+
+				$.ajax({
+					type: 'GET',
+					url: 'http://localhost:3000/dict/' + id + '/children',
+					async: false,
+			    jsonpCallback: 'jsonCallback',
+			    contentType: "application/json",
+			    dataType: 'jsonp',
+					success: function( data ) {
+						if(data.results.length)
+							conkey.selections = data.results;
+							conkey.createMenu($element, newReplacement);
+					}
+				} );
 			} );
 		},
 
