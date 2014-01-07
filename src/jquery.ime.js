@@ -123,7 +123,7 @@
 				// If we're here that means 'ctrl' key has been pressed and released without any other key.  In other words, "ctrl-null"
 				this.ctrlNull = false;
 				// show / hide context menu
-				this.inputmethod.showMenu();
+				this.inputmethod.createMenu(this.$element);
 			}
 		},
 
