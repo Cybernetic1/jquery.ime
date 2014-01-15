@@ -12,6 +12,8 @@
 		version: '1.0',
 		selections: [],
 
+		rootNodes: [],
+
 		// Hide or show context menu
 		showMenu: function() {
 			console.log("Trying to show context menu.");
@@ -24,7 +26,7 @@
 					moveDown = ($elem.outerHeight() / 2);
 		},
 
-		createMenu: function($element, replacement) {
+		createMenu: function( $element, replacement ) {
 			var $menu, $li, $ul, i,
 			$selector = $( 'body' ).data( 'imeselector' ),
 			liHeight = 32,
@@ -115,7 +117,6 @@
 					id = $(this).data('id'),
 					pos = val.length || 0;
 
-
 				if(replacement != null)
 					pos = val.lastIndexOf(replacement);
 
@@ -127,19 +128,36 @@
 				$input.val( val.substr(0, pos) + newReplacement ).focus();
 
 				$.ajax({
-					type: 'GET',
-					url: 'http://localhost:3000/dict/' + id + '/children',
-					async: false,
-			    jsonpCallback: 'jsonCallback',
-			    contentType: "application/json",
-			    dataType: 'jsonp',
-					success: function( data ) {
-						if(data.results.length)
-							conkey.selections = data.results;
-							conkey.createMenu($element, newReplacement);
+	        type: 'GET',
+	        url: 'http://localhost:3000/dict/' + id + '/children',
+	        async: false,
+					jsonpCallback: 'jsonCallback',
+					contentType: "application/json",
+					dataType: 'jsonp',
+	        success: function( data ) {
+            if(data.results.length) {
+              conkey.selections = data.results;
+              conkey.createMenu($element, newReplacement);
+          	} else {
+          		conkey.removeMenu();
+          	}
 					}
 				} );
 			} );
+		},
+
+		removeMenu: function() {
+			var $selector = $( 'body' ).data( 'imeselector' );
+			var $menu = $( '.ime-autocomplete', $selector.$imeSetting );
+			var $ul = $( 'ul', $menu );
+			$('.popup-box').remove();
+			$( 'li', $ul ).navigate( 'destroy' );
+
+			// reset menu to root
+			conkey.selections = conkey.rootNodes;
+			console.log(conkey.selections);
+			// remove meun
+			$menu.remove();
 		},
 
 		// This function is specially for Concept keyboard
@@ -224,6 +242,7 @@
     dataType: 'jsonp',
 		success: function( data ) {
 			if(data.results.length)
+				conkey.rootNodes = data.results;
 				conkey.selections = data.results;
 				conkey.createMenu($('input:focus, textarea:focus').first());
 		}
