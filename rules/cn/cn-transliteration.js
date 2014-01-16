@@ -10037,8 +10037,9 @@
 
 			var i, replacement, rule, timer, 
 				pinyinList = this.inputmethod.pinyinList,
+				prior = this.inputmethod.prior,
 				unsorted = [], selections = [],
-				k_n, dk, dn, d, score, // beta = 30.0,
+				k_n, dk, dn, d, score, p_sum, // beta = 30.0,
 				$menu, $li, $ul,
 				$element = this.$element,
 				$selector = $element.data('imeselector'),
@@ -10052,23 +10053,52 @@
 			k_n = input.match('(b|p|m|f|d|t|n|l|g|k|h|j|q|x|zh|ch|sh|r|z|c|s|w|y)?(a|ai|an|ang|ao|e|ei|en|eng|er|i|ia|ian|iang|iao|ie|in|ing|io|iong|iu|o|ong|ou|u|ua|uai|uan|uang|ue|ui|un|uo|ü|üan|ün) $');
 
 			if (k_n === null) { return input; }
+			if (k_n[1] === undefined) { k_n[1] = ''; }
+			// note that k_n[0] is the WHOLE matched string!
+			console.log("k_n 0,1,2 = ", k_n[0], k_n[1], k_n[2]);
+			
+			// 1. for each element of prior
+			// 2.    calculate k_n distances
+			// 3.    sum up as probabilities
+			// 4. the result is P(input) as evidence
+			// 4. perhaps print results to console and see
 
-			// Find fuzzy match
+			// sigmoid function for use below
+			function sigma(x) {
+				return x;
+				}
+
+			// ************ Calculate evidence, ie P(input)
+			/*
+			p_sum = 0.0;
+			for ( i = 0; i < prior.length; i++) {
+				// 1. calculate k_n distance between "input" and "prior"
+				dk = distance_k( k_n[1], prior[i][0] );	// d between consonants
+				dn = distance_n( k_n[2], prior[i][1] );	// d between nuclei
+				d = 0.5 * dk + 0.5 * dn;						// overall distance
+
+				// console.log(prior[i][0], prior[i][1], prior[i][2]);
+
+				// This sum would be the evidence, P(input)
+				// console.log("delta P = ", prior[i][2] * sigma(1 - d));
+				p_sum += prior[i][2] * sigma(1.1 - d);
+			}
+			console.log("p_sum =", p_sum);
+			*/
+
+			// Find fuzzy match using Bayes rule
 			for ( i = 0; i < pinyinList.length; i++ ) {
 				rule = pinyinList[i];
 
-				// 2. calculate distance between consonants
-				dk = distance_k( k_n[1], rule[0] );
+				// calculate distance between consonants and nuclei
+				dk = distance_k( k_n[1], rule[0] );	// d between consonants
+				dn = distance_n( k_n[2], rule[1] );	// d between nuclei
+				d = 0.5 * dk + 0.5 * dn;				// overall distance
 
-				// 3. calculate distance between nuclei
-				dn = distance_n( k_n[2], rule[1] );
-
-				// 4. calculate overall distance
-				d = 0.5 * dk + 0.5 * dn;
-
-				// 5. calculate score
-				// The number '19' in denominator can be tweaked.
-				score = (1.0 - d) * (Math.log( rule[4] ) + 16) / 19;
+				// calculate score
+				// old version: score = (1.0 - d) * (Math.log( rule[4] ) + 16) / 19;
+				score = Math.exp(10.0* (1.1 - d)) * rule[4];
+				// console.log(rule[3], rule[0] + rule[1], " score = ", score);
 
 				unsorted.push( [rule[3], rule[0] + rule[1], dk, dn, score.toFixed(5)] );
 
