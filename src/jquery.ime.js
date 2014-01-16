@@ -244,6 +244,10 @@
 		disable: function () {
 			this.active = false;
 			$.ime.preferences.setIM( 'system' );
+
+			// if input method is conkey then disable conkey menu
+			if(this.inputmethod && this.inputmethod.id === 'conkey')
+					this.inputmethod.removeMenu();
 		},
 
 		/**

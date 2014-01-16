@@ -35,6 +35,9 @@
 
 			$menu = $( '.ime-autocomplete', $selector.$imeSetting );
 
+			// Hide ime menu
+			$selector.hide();
+
 			// Initialize selection menu
 			if ( $menu != null && !$menu.length ) {
 				$menu = $( '<div class="ime-autocomplete"></div>' );
@@ -112,7 +115,7 @@
 				var $input = $element,
 					// The character is already replaced with 'replacement'
 					// so we have to replace the replacement with a new one
-					val = $input.val(),
+					val = $input.val() || '',
 					newReplacement = $(this).data('replacement'),
 					id = $(this).data('id'),
 					pos = val.length || 0;
@@ -155,7 +158,7 @@
 
 			// reset menu to root
 			conkey.selections = conkey.rootNodes;
-			console.log(conkey.selections);
+
 			// remove meun
 			$menu.remove();
 		},
