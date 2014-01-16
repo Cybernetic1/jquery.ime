@@ -26,7 +26,7 @@
 					moveDown = ($elem.outerHeight() / 2);
 		},
 
-		createMenu: function( $element, replacement ) {
+		createMenu: function( $element, replacement, parent ) {
 			var $menu, $li, $ul, i,
 			$selector = $( 'body' ).data( 'imeselector' ),
 			liHeight = 32,
@@ -60,6 +60,10 @@
 				$li.appendTo( $ul )
 					.data( 'replacement', conkey.selections[i]['name'] )
 					.data( 'id', conkey.selections[i]['_id'] );
+
+				// Bind parent id to element
+				if(parent != null)
+						$li.data( 'parent', parent );
 
 				// Insert matched word to menu
 				$('.word', $li).html( conkey.selections[i]['name']);
@@ -140,7 +144,7 @@
 	        success: function( data ) {
             if(data.results.length) {
               conkey.selections = data.results;
-              conkey.createMenu($element, newReplacement);
+              conkey.createMenu($element, newReplacement, id);
           	} else {
           		conkey.removeMenu();
           	}
@@ -225,7 +229,7 @@
 			*/
 
 			// Create selection menu
-			conkey.createMenu(this.$element);
+			// conkey.createMenu(this.$element);
 
 			// Replace input string and return
 			return input;
@@ -247,7 +251,8 @@
 			if(data.results.length)
 				conkey.rootNodes = data.results;
 				conkey.selections = data.results;
-				conkey.createMenu($('input:focus, textarea:focus').first());
+				$('input:focus, textarea:focus').first();
+				//conkey.createMenu($('input:focus, textarea:focus').first());
 		}
 	});
 
