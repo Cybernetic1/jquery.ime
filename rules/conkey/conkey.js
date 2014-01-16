@@ -49,9 +49,17 @@
 			} else {
 				$ul = $( 'ul', $menu );
 				// Reset menu
-				$menu.unbind( 'scroll' );
 				$ul.empty();
 				$('li', $ul).navigate( 'destroy' );
+			}
+
+			// parent level
+			if(conkey.selections.length && conkey.selections[0]['parent'] != null) {
+				$li = $( '<li><div class="word"></div></li>' );
+				$li.appendTo( $ul )
+					.data( 'replacement', replacement )
+					.data( 'id', parent );
+				$('.word', $li).html( '..' );
 			}
 
 			// Fill data into selection menu
@@ -59,6 +67,7 @@
 				$li = $( '<li><div class="word"></div></li>' );
 				$li.appendTo( $ul )
 					.data( 'replacement', conkey.selections[i]['name'] )
+					.data( 'parent', conkey.selections[i]['parent'] )
 					.data( 'id', conkey.selections[i]['_id'] );
 
 				// Bind parent id to element
@@ -122,7 +131,9 @@
 					val = $input.val() || '',
 					newReplacement = $(this).data('replacement'),
 					id = $(this).data('id'),
-					pos = val.length || 0;
+					parent = $(this).data('parent'),
+					pos = val.length || 0,
+					url = 'http://localhost:3000/dict/' + id + '/children'
 
 				if(replacement != null)
 					pos = val.lastIndexOf(replacement);
@@ -134,22 +145,27 @@
 
 				$input.val( val.substr(0, pos) + newReplacement ).focus();
 
-				$.ajax({
-	        type: 'GET',
-	        url: 'http://localhost:3000/dict/' + id + '/children',
-	        async: false,
-					jsonpCallback: 'jsonCallback',
-					contentType: "application/json",
-					dataType: 'jsonp',
-	        success: function( data ) {
-            if(data.results.length) {
-              conkey.selections = data.results;
-              conkey.createMenu($element, newReplacement, id);
-          	} else {
-          		conkey.removeMenu();
-          	}
-					}
-				} );
+				if(id == null) {
+					conkey.selections = conkey.rootNodes;
+					conkey.createMenu($element, newReplacement);
+				} else {
+					$.ajax({
+		        type: 'GET',
+		        url: url,
+		        async: false,
+						jsonpCallback: 'jsonCallback',
+						contentType: "application/json",
+						dataType: 'jsonp',
+		        success: function( data ) {
+	            if(data.results.length) {
+	              conkey.selections = data.results;
+	              conkey.createMenu($element, newReplacement, parent);
+	          	} else {
+	          		conkey.removeMenu();
+	          	}
+						}
+					} );
+				}
 			} );
 		},
 
