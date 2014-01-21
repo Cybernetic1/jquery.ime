@@ -152,10 +152,7 @@
 					$.ajax({
 		        type: 'GET',
 		        url: url,
-		        async: false,
-						jsonpCallback: 'jsonCallback',
-						contentType: "application/json",
-						dataType: 'jsonp',
+						dataType: 'json',
 		        success: function( data ) {
 	            if(data.results.length) {
 	              conkey.selections = data.results;
@@ -259,10 +256,7 @@
 	$.ajax({
 		type: 'GET',
 		url: 'http://localhost:3000/dict',
-		async: false,
-    jsonpCallback: 'jsonCallback',
-    contentType: "application/json",
-    dataType: 'jsonp',
+    dataType: 'json',
 		success: function( data ) {
 			if(data.results.length)
 				conkey.rootNodes = data.results;
