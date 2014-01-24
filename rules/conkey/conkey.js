@@ -256,7 +256,8 @@
 	// Call server to get all root level items
 	$.ajax({
 		type: 'GET',
-		url: 'http://54.200.55.224:3000/dict',
+		// url: 'http://54.200.55.224:3000/dict',
+		url: 'http://localhost:3000/dict',
     dataType: 'json',
 		success: function( data ) {
 			if(data.results.length)
