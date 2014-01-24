@@ -18,19 +18,18 @@ import re				# regular expressions
 inspectBegin = 554
 inspectEnd = 555
 
-inTitle = False
-title = ""
-header = ""
-
-# servername = 'ckc.ied.edu.hk'
-# filename = '/ckc2/dictionary.php?jiinput=闡&lang=en&form1=1'
-servername = 'www.mdbg.net'
-filename = '/chindict/chindict.php?page=chardict&cdcanoce=0&cdqchi=%E7%82%BA'
+servername = 'ckc.ied.edu.hk'
+filename = '/ckc2/dictionary.php?jiinput=闡&lang=en&form1=1'
+# servername = 'www.mdbg.net'
+# filename = '/chindict/chindict.php?page=chardict&cdcanoce=0&cdqchi=%E7%82%BA'
 
 server = httplib.HTTP(servername)						# connect to http site/server
 
 # Input list of characters:
-f = open("canto-raw.txt", "r")
+f = open("canto-freq.txt", "r")
+
+# Output 
+fo = open("HKIEd-sort-by-freq.txt", "w")
 
 # c = raw_input("Enter character to look up: ")
 
@@ -41,13 +40,15 @@ index = 0
 while True:							# this loop is for looking up multiple chars
 	line = f.readline()
 	c = line.decode('utf8')[0]
-	print c
-	filename = '/chindict/chindict.php?page=chardict&cdcanoce=0&cdqchi=' + \
-		"%{:X}%{:X}%{:X}".format(ord(line[0]), ord(line[1]), ord(line[2]))
-	print filename
+	# print c
+	filename = '/ckc2/dictionary.php?jiinput=' + \
+		"%{:X}%{:X}%{:X}".format(ord(line[0]), ord(line[1]), ord(line[2])) + \
+		'&lang=en&form1=1'
+	# print filename
+
 	# increment index
 	index += 1
-	if index > 3: break									# look up N characters
+	# if index > 100: break								# look up N characters
 
 	server.putrequest('GET', filename)				# send request and headers
 	server.putheader('Accept', 'text/html')		# POST requests work here too
@@ -62,9 +63,14 @@ while True:							# this loop is for looking up multiple chars
 		file.close()									# show lines with EOL at end
 
 		for line in htmlPage[inspectBegin : inspectEnd]:
-			print line
+			# print line
 			# The format of the HTML element is:
 			# <a href="javascript: playSound('audio/can/tsin2.wav'); "><img src="image/audio_play.gif" alt=""/>tsin2</a>
-			# <div class="pinyin"><a href="#" onclick="aj('201c64',this,'cjp',0,'蹲|cyun4 deon1'); trackExitLink('inline-pronounce-jyutping', 'result-cd'); return false">chyun4, deun1</a>
-			pinyin = re.findall('<div class=\"pinyin\"><a href=\"#\" onclick=\"aj(\'[0-9a-z]*\',this,\'cjp\',0,\'*|([a-z0-9 ]*)\');', line)
-			print c, " = ", pinyin
+			pinyin = re.findall('<img src=\"image/audio_play\.gif\" alt=\"\"/>([a-z]*[0-9 ]*)</a>', line)
+			print str(index) + '.', c, " = ", pinyin
+
+			for p in pinyin:
+				fo.write(c.encode('utf8') + ',' + p + '\n')
+
+fo.close()
+f.close()

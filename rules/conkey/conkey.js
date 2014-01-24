@@ -133,8 +133,9 @@
 					id = $(this).data('id'),
 					parent = $(this).data('parent'),
 					pos = val.length || 0,
-					url = 'http://54.200.55.224:3000/dict/' + id + '/children'
-
+					// url = 'http://54.200.55.224:3000/dict/' + id + '/children'
+					url = 'http://localhost:3000/dict/' + id + '/children'
+					
 				if(replacement != null)
 					pos = val.lastIndexOf(replacement);
 
