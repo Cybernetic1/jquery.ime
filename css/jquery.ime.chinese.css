@@ -6,7 +6,7 @@
   overflow: auto;
   overflow-x: hidden;
   width: auto;
-  max-height: 300px;
+  max-height: 800px;
   box-shadow: 6px 8px 32px rgba(0,0,0,0.32);
 }
 
@@ -62,7 +62,7 @@
   position: absolute;
   z-index: 99999;
   max-width: 400px;
-  max-height: 400px;
+  max-height: 800px;
   box-shadow: 6px 8px 32px rgba(0,0,0,0.32);
   padding: 12px;
 }

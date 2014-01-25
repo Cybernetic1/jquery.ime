@@ -14,18 +14,6 @@
 
 		rootNodes: [],
 
-		// Hide or show context menu
-		showMenu: function() {
-			console.log("Trying to show context menu.");
-
-			var $elem = $('<div style="display:none;" class="popup-box"><img src=""/></div>');
-			$('img', $elem).attr('src', 'http://placehold.it/640x480');
-			$elem.appendTo('body').fadeIn();
-
-			var	moveLeft = $(this).outerWidth(),
-					moveDown = ($elem.outerHeight() / 2);
-		},
-
 		createMenu: function( $element, replacement, parent ) {
 			var $menu, $li, $ul, i,
 			$selector = $( 'body' ).data( 'imeselector' ),
@@ -65,7 +53,7 @@
 			// Fill data into selection menu
 			for ( i = 0; i < conkey.selections.length; i++ ) {
 				$li = $( '<li><div class="word"></div></li>' );
-				$li.appendTo( $ul )
+				$li.prependTo( $ul )
 					.data( 'replacement', conkey.selections[i]['name'] )
 					.data( 'parent', conkey.selections[i]['parent'] )
 					.data( 'id', conkey.selections[i]['_id'] );
