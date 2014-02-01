@@ -124,18 +124,22 @@
 				// If we're here that means 'ctrl' key has been pressed and released without any other key.  In other words, "ctrl-null"
 				this.ctrlNull = false;
 				// show / hide context menu
-				if(this.inputmethod && this.inputmethod.id === 'conkey') {
+				if(this.inputmethod && this.inputmethod.id === 'conkey' ) {
 					if(!this.inputmethod.isShowed())
 						this.inputmethod.createMenu(this.$element);
 					else
 						this.inputmethod.removeMenu();
 				}
-			} else if ( e.which === 27 && this.escNull) { // 27 = esc key
+			} else if ( e.which === 27 && this.escNull ) { // 27 = esc key
 				this.escNull = false;
 
 				if(this.inputmethod && this.inputmethod.id === 'conkey')
 					if(this.inputmethod.isShowed())
 						this.inputmethod.removeMenu();
+			} else if ( e.which === 8 ) { // 8 = backspace
+				if(this.inputmethod && this.inputmethod.id === 'conkey')
+					if(this.inputmethod.isShowed())
+						this.inputmethod.upperLevel();
 			}
 		},
 

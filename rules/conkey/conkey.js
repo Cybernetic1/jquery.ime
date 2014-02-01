@@ -18,6 +18,17 @@
 			return conkey.showed;
 		},
 
+		upperLevel: function() {
+			var $menu, $back,
+			$selector = $( 'body' ).data( 'imeselector' );
+			
+			$menu = $( '.ime-autocomplete', $selector.$imeSetting );
+			$back = $( '.word.back', $menu );
+
+			if($back.length)
+				$back.trigger('click');
+		},
+
 		createMenu: function( $element, replacement, parent ) {
 			var $menu, $li, $ul, i,
 			$selector = $( 'body' ).data( 'imeselector' ),
@@ -49,7 +60,7 @@
 
 			// parent level
 			if(conkey.selections.length && conkey.selections[0]['parent'] != null) {
-				$li = $( '<li><div class="word"></div></li>' );
+				$li = $( '<li><div class="word back"></div></li>' );
 				$li.appendTo( $ul )
 					.data( 'replacement', replacement )
 					.data( 'id', parent );
