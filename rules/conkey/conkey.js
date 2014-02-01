@@ -11,8 +11,12 @@
 		license: 'GPLv3',
 		version: '1.0',
 		selections: [],
-
+		showed: false,
 		rootNodes: [],
+
+		isShowed: function() {
+			return conkey.showed;
+		},
 
 		createMenu: function( $element, replacement, parent ) {
 			var $menu, $li, $ul, i,
@@ -20,6 +24,8 @@
 			liHeight = 32,
 			moveLeft = 0,
 			moveDown = 0;
+
+			conkey.showed = true;
 
 			$menu = $( '.ime-autocomplete', $selector.$imeSetting );
 
@@ -156,6 +162,8 @@
 		},
 
 		removeMenu: function() {
+			conkey.showed = false;
+
 			var $selector = $( 'body' ).data( 'imeselector' );
 			var $menu = $( '.ime-autocomplete', $selector.$imeSetting );
 			var $ul = $( 'ul', $menu );

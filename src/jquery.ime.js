@@ -19,6 +19,7 @@
 		this.active = false;
 		this.shifted = false;
 		this.ctrlNull = false;
+		this.escNull = false;
 		this.inputmethod = null;
 		this.language = null;
 		this.context = '';
@@ -119,12 +120,22 @@
 		keyup: function ( e ) {
 			if ( e.which === 16 ) { // shift key
 				this.shifted = false;
-			} else if ( e.which ===  17 && this.ctrlNull) { // 17 = ctrl key
+			} else if ( e.which === 17 && this.ctrlNull) { // 17 = ctrl key
 				// If we're here that means 'ctrl' key has been pressed and released without any other key.  In other words, "ctrl-null"
 				this.ctrlNull = false;
 				// show / hide context menu
+				if(this.inputmethod && this.inputmethod.id === 'conkey') {
+					if(!this.inputmethod.isShowed())
+						this.inputmethod.createMenu(this.$element);
+					else
+						this.inputmethod.removeMenu();
+				}
+			} else if ( e.which === 27 && this.escNull) { // 27 = esc key
+				this.escNull = false;
+
 				if(this.inputmethod && this.inputmethod.id === 'conkey')
-					this.inputmethod.createMenu(this.$element);
+					if(this.inputmethod.isShowed())
+						this.inputmethod.removeMenu();
 			}
 		},
 
@@ -133,6 +144,10 @@
 				this.shifted = true;
 			} else if ( e.which === 17) { // ctrl key
 				this.ctrlNull = true;
+			} else if ( e.which === 27) { // esc key
+				this.escNull = true;
+			} else if ( this.escNull ) {
+				this.escNull = false;
 			} else if ( this.ctrlNull ) {
 				// Another key is pressed after 'ctrl' is pressed
 				// This cancels the status of ctrlNull
