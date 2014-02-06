@@ -91,12 +91,16 @@
 			source: 'rules/ckb/ckb-transliteration-lakbd.js'
 		},
 		'cn': {
-			name: 'YKY中文',
+			name: '普通话',
 			source: 'rules/cn/cn-transliteration.js'
 		},
 		'conkey': {
-			name: 'concept keyboard',
+			name: 'Concepts',
 			source: 'rules/conkey/conkey.js'
+		},
+		'ct': {
+			name: '广州话',
+			source: 'rules/cantonese/cantonese-transliteration.js'
 		},
 		'cv-cyr-altgr': {
 			name: 'Чăвашла (AltGr)',
@@ -642,6 +646,10 @@
 		'conkey': {
 			autonym: 'Conkey',
 			inputmethods: [ 'conkey' ]
+		},
+		'ct': {
+			autonym: 'Cantonese',
+			inputmethods: [ 'ct' ]
 		},
 		'cv': {
 			autonym: 'Чăвашла',
