@@ -84,6 +84,7 @@
 
 				// Insert image to menu
 				// TODO: fetch proper image to menu
+				/*
 				$li.hover(function() {
 					var $elem = $('<div style="display:none;" class="popup-box"><img src=""/></div>');
 					$('img', $elem).attr('src', 'http://placehold.it/640x480');
@@ -94,6 +95,7 @@
 				}, function() {
 					$('.popup-box').remove();
 				});
+				*/
 
 				$li.mousemove(function(e) {
 					var target = '.popup-box',
@@ -196,7 +198,7 @@
 			// ************ Main function begins here **************
 
 			// return empty string if typed number 0-9
-			if(input.match(/^[0-9]$/)) return '';
+			// if(input.match(/^[0-9]$/)) return '';
 
 			/*var i, replacement, rule, timer,
 				unsorted = [],
