@@ -36,7 +36,7 @@
 		},
 
 		getDefaultLanguage: function () {
-			return 'cn';
+			return 'conkey';
 		},
 
 		getPreviousLanguages: function () {

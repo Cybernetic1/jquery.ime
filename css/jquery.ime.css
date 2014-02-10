@@ -21,6 +21,17 @@
 	top: 100px;
 }
 
+.imeselector.inactive {
+	/* @embed */
+	background: url('../images/ime-inactive.png') no-repeat left center;
+	background-image: -webkit-linear-gradient(transparent, transparent), url('../images/ime-inactive.svg');
+	background-image: -moz-linear-gradient(transparent, transparent), url('../images/ime-inactive.svg');
+	background-image: linear-gradient(transparent, transparent), url('../images/ime-inactive.svg');
+	background-position: left 3px center;
+	background-position-x: 3px;
+	background-position-y: -9px;
+}
+
 .imeselector:hover {
 	box-shadow: 0 1px 3px 0 #565656;
 	border-top: none;

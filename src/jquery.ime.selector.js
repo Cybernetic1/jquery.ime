@@ -120,9 +120,15 @@
 			imeselector.$imeSetting.on( 'click.ime', function ( e ) {
 				var t = $( e.target );
 
-				if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
-					imeselector.toggle();
-				}
+				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
+				// 	imeselector.toggle();
+				// }
+				
+				var e = jQuery.Event("keydown");
+				e.which = 77;
+				e.ctrlKey = true;
+				imeselector.$element.trigger(e);
+				
 				e.stopPropagation();
 			} );
 
@@ -465,9 +471,14 @@
 				imeselector.hide();
 				ime.enable();
 				ime.setIM( inputmethodId );
-				imeselector.$imeSetting.find( 'a.ime-name' ).text(
-					$.ime.sources[inputmethodId].name
-				);
+
+				if(inputmethodId == 'conkey') {
+					imeselector.$imeSetting.addClass('inactive');
+				}
+
+				// imeselector.$imeSetting.find( 'a.ime-name' ).text(
+				// 	$.ime.sources[inputmethodId].name
+				// );
 
 				//imeselector.position();
 
@@ -484,6 +495,7 @@
 			this.$menu.find( 'div.ime-disable' ).addClass( 'ime-checked' );
 			this.$element.data( 'ime' ).disable();
 			this.$imeSetting.find( 'a.ime-name' ).text( '' );
+			this.$imeSetting.removeClass('inactive');
 			this.hide();
 			//this.position();
 
@@ -659,9 +671,13 @@
 		);
 	}
 
+	// selectorTemplate = '<div class="imeselector imeselector-toggle">' +
+	// 	'<a class="ime-name imeselector-toggle" href="#"></a>' +
+	// 	'<b class="ime-setting-caret imeselector-toggle"></b></div>';
+
 	selectorTemplate = '<div class="imeselector imeselector-toggle">' +
 		'<a class="ime-name imeselector-toggle" href="#"></a>' +
-		'<b class="ime-setting-caret imeselector-toggle"></b></div>';
+		'</div>';
 
 	MutationObserver = window.MutationObserver ||
 		window.WebKitMutationObserver ||

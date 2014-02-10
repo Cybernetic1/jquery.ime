@@ -124,7 +124,7 @@
 				// If we're here that means 'ctrl' key has been pressed and released without any other key.  In other words, "ctrl-null"
 				this.ctrlNull = false;
 				// show / hide context menu
-				if(this.inputmethod && this.inputmethod.id === 'conkey' ) {
+				if(this.active && this.inputmethod && this.inputmethod.id === 'conkey' ) {
 					if(!this.inputmethod.isShowed())
 						this.inputmethod.createMenu(this.$element);
 					else
@@ -265,8 +265,9 @@
 			$.ime.preferences.setIM( 'system' );
 
 			// if input method is conkey then disable conkey menu
-			if(this.inputmethod && this.inputmethod.id === 'conkey')
-					this.inputmethod.removeMenu();
+			if(this.inputmethod && this.inputmethod.id === 'conkey') {
+				this.inputmethod.removeMenu();
+			}
 		},
 
 		/**
