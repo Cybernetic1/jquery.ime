@@ -481,6 +481,10 @@
 		helpHandler: null // Called for each ime option in the menu
 	};
 
+	$.ime.cli = function (cmd, data) {
+
+	};
+
 	/**
 	 * private function for debugging
 	 */
