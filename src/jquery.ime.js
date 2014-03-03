@@ -483,6 +483,39 @@
 
 	$.ime.cli = function (cmd, data) {
 
+		if ((cmd == 'update' || cmd == 'remove') && typeof(data) != 'undefined') return 'Must enter id';
+		if (cmd == 'help') return "$.ime.cli(\"create\", {t:\"ABC\", parent: \"parent_id\"})\n\r";
+
+		var base = 'http://localhost:3000/dict'
+			, requests = {
+					create: {
+						url: base,
+						method: 'POST'
+					},
+					update: {
+						url: base + '/' + data['id'],
+						method: 'PUT'
+					},
+					remove: {
+						url: base + '/' + data['id'],
+						method: 'DELETE'
+					}
+				};
+
+		if (typeof(requests[cmd]) == 'undefined') return 'Command not found!';
+
+		var url = requests[cmd].url
+			, method = requests[cmd].method;
+
+		$.ajax({
+      type: method,
+      url: url,
+      data: data,
+			dataType: 'json',
+      success: function( data ) {
+        console.log('response: ', data);
+			}
+		} );
 	};
 
 	/**

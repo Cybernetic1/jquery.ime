@@ -69,11 +69,11 @@
 
 			// Fill data into selection menu
 			for ( i = 0; i < conkey.selections.length; i++ ) {
-				$li = $( '<li><div class="word"></div></li>' );
+				$li = $( '<li data-id=""><div class="word"></div></li>' );
 				$li.prependTo( $ul )
 					.data( 'replacement', conkey.selections[i]['name'] )
 					.data( 'parent', conkey.selections[i]['parent'] )
-					.data( 'id', conkey.selections[i]['_id'] );
+					.attr( 'data-id', conkey.selections[i]['_id'] );
 
 				// Bind parent id to element
 				if(parent != null)
