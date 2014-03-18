@@ -90,18 +90,18 @@
 		// 	name: 'لاتینی',
 		// 	source: 'rules/ckb/ckb-transliteration-lakbd.js'
 		// },
-		// 'cn': {
-		// 	name: '普通话',
-		// 	source: 'rules/cn/cn-transliteration.js'
-		// },
+		'cn': {
+			name: '普通话',
+			source: 'rules/cn/cn-transliteration.js'
+		},
 		'conkey': {
 			name: 'Concepts',
 			source: 'rules/conkey/conkey.js'
-	  }//,
-	// 	'ct': {
-	// 		name: '广州话',
-	// 		source: 'rules/cantonese/cantonese-transliteration.js'
-	// 	},
+	  },
+		'ct': {
+			name: '广州话',
+			source: 'rules/cantonese/cantonese-transliteration.js'
+		}//,
 	// 	'cv-cyr-altgr': {
 	// 		name: 'Чăвашла (AltGr)',
 	// 		source: 'rules/cv/cv-cyr-altgr.js'
@@ -639,18 +639,18 @@
 		// 	autonym: 'нохчийн',
 		// 	inputmethods: [ 'cyrl-palochka' ]
 		// },
-		// 'cn': {
-		// 	autonym: 'Chinese',
-		// 	inputmethods: [ 'cn' ]
-		// },
+		'cn': {
+			autonym: 'Chinese',
+			inputmethods: [ 'cn' ]
+		},
 		'conkey': {
 			autonym: 'Conkey',
 			inputmethods: [ 'conkey' ]
+		},
+		'ct': {
+			autonym: 'Cantonese',
+			inputmethods: [ 'ct' ]
 		}//,
-		// 'ct': {
-		// 	autonym: 'Cantonese',
-		// 	inputmethods: [ 'ct' ]
-		// },
 		// 'cv': {
 		// 	autonym: 'Чăвашла',
 		// 	inputmethods: [ 'cv-cyr-altgr', 'cv-lat-altgr', 'cv-cyr-numbers' ]

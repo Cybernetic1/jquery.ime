@@ -24,6 +24,15 @@
 			//this.$imeSetting.hide();
 		},
 
+		triggerIME: function() {
+			var ime = $( 'body' ).data( 'ime' );
+			var e = jQuery.Event("keydown");
+
+			e.which = 77;
+			e.ctrlKey = true;
+			this.$element.trigger(e);
+		},
+
 		prepareSelectorMenu: function () {
 			// TODO: In this approach there is a menu for each editable area.
 			// With correct event mapping we can probably reduce it to one menu.
@@ -117,20 +126,38 @@
 		listen: function () {
 			var imeselector = this;
 
-			imeselector.$imeSetting.on( 'click.ime', function ( e ) {
+			$('.imeselector-switcher', imeselector.$imeSetting).on( 'click.ime', function ( e ) {
 				var t = $( e.target );
 
 				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
 				// 	imeselector.toggle();
 				// }
 				
-				var e = jQuery.Event("keydown");
-				e.which = 77;
-				e.ctrlKey = true;
-				imeselector.$element.trigger(e);
-				
-				e.stopPropagation();
+				imeselector.triggerIME();
+
+				return false;
 			} );
+
+			$('.imeselector-conkey', imeselector.$imeSetting).on( 'click.conkey', function ( e ) {
+				imeselector.selectLanguage('conkey');
+				imeselector.triggerIME();
+
+				return false;
+			});
+
+			$('.imeselector-pinyin', imeselector.$imeSetting).on( 'click.pinyin', function ( e ) {
+				imeselector.selectLanguage('cn');
+				imeselector.triggerIME();
+
+				return false;
+			});
+
+			$('.imeselector-cantonese', imeselector.$imeSetting).on( 'click.cantonese', function ( e ) {
+				imeselector.selectLanguage('ct');
+				imeselector.triggerIME();
+
+				return false;
+			});
 
 			// imeselector.$element.on( 'blur.ime', function () {
 			// 	if ( !imeselector.$imeSetting.hasClass( 'ime-onfocus' ) ) {
@@ -474,6 +501,20 @@
 
 				if(inputmethodId == 'conkey') {
 					imeselector.$imeSetting.addClass('inactive');
+					$('.imeselector-toggle').removeClass('active');
+					$('.imeselector-conkey', imeselector.$imeSetting).addClass('active');
+				}
+
+				if(inputmethodId == 'ct') {
+					imeselector.$imeSetting.addClass('inactive');
+					$('.imeselector-toggle').removeClass('active');
+					$('.imeselector-cantonese', imeselector.$imeSetting).addClass('active');
+				}
+
+				if(inputmethodId == 'cn') {
+					imeselector.$imeSetting.addClass('inactive');
+					$('.imeselector-toggle').removeClass('active');
+					$('.imeselector-pinyin', imeselector.$imeSetting).addClass('active');
 				}
 
 				// imeselector.$imeSetting.find( 'a.ime-name' ).text(
@@ -496,6 +537,7 @@
 			this.$element.data( 'ime' ).disable();
 			this.$imeSetting.find( 'a.ime-name' ).text( '' );
 			this.$imeSetting.removeClass('inactive');
+			$('.imeselector-toggle').removeClass('active');
 			this.hide();
 			//this.position();
 
@@ -676,7 +718,12 @@
 	// 	'<b class="ime-setting-caret imeselector-toggle"></b></div>';
 
 	selectorTemplate = '<div class="imeselector imeselector-toggle">' +
-		'<a class="ime-name imeselector-toggle" href="#"></a>' +
+		'<ul class="buttons">' +
+		'  <li class="button"><a class="imeselector-switcher imeselector-toggle" href="#"></a></li>' +
+		'  <li class="button"><a class="imeselector-conkey imeselector-toggle" href="#"></a></li>' +
+		'  <li class="button"><a class="imeselector-pinyin imeselector-toggle" href="#"></a></li>' +
+		'  <li class="button"><a class="imeselector-cantonese imeselector-toggle" href="#"></a></li>' +
+		'</ul>' +
 		'</div>';
 
 	MutationObserver = window.MutationObserver ||
