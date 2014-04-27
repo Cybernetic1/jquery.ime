@@ -153,9 +153,23 @@
 			});
 
 			$('.imeselector-cantonese', imeselector.$imeSetting).on( 'click.cantonese', function ( e ) {
-				imeselector.selectLanguage('ct');
+				imeselector.selectLanguage('conkey');
 				imeselector.triggerIME();
 
+				return false;
+			});
+
+			$('.imeselector-clipboard', imeselector.$imeSetting).on( 'click.clipboard', function ( e ) {
+				// imeselector.triggerIME();
+
+				return false;
+			});
+
+			$('.imeselector-enter', imeselector.$imeSetting).on( 'click.enter', function ( e ) {
+				var audio = new Audio("./sending.ogg");
+				audio.play();
+
+				// imeselector.triggerIME();
 				return false;
 			});
 
@@ -511,6 +525,12 @@
 					$('.imeselector-cantonese', imeselector.$imeSetting).addClass('active');
 				}
 
+				if(inputmethodId == 'conkey') {
+					imeselector.$imeSetting.addClass('inactive');
+					$('.imeselector-toggle').removeClass('active');
+					$('.imeselector-clipboard', imeselector.$imeSetting).addClass('active');
+				}
+
 				if(inputmethodId == 'cn') {
 					imeselector.$imeSetting.addClass('inactive');
 					$('.imeselector-toggle').removeClass('active');
@@ -721,6 +741,10 @@
 		'<ul class="buttons">' +
 		'  <li class="button"><a class="imeselector-switcher imeselector-toggle" href="#"></a></li>' +
 		'  <li class="button"><a class="imeselector-conkey imeselector-toggle" href="#"></a></li>' +
+		'  <li class="button"><a class="imeselector-clipboard imeselector-toggle" href="#"></a></li>' +
+		'  <li class="button"><a class="imeselector-enter imeselector-toggle" href="#"></a></li>' +
+		'  <li class="button"><a class="imeselector-smiley imeselector-toggle" href="#"></a></li>' +
+		'  <li class="button"><a class="imeselector-quotes imeselector-toggle" href="#"></a></li>' +
 		'  <li class="button"><a class="imeselector-pinyin imeselector-toggle" href="#"></a></li>' +
 		'  <li class="button"><a class="imeselector-cantonese imeselector-toggle" href="#"></a></li>' +
 		'</ul>' +

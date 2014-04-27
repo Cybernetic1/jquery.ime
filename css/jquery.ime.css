@@ -1,7 +1,7 @@
 .imeselector {
 	position: fixed;
 	background-color: rgba(0,0,0,0.05);
-	width: 85px;
+	width: 169px;	/* originally = 85 */
 	height: 21px;
 	padding: 2px;
 	font-size: small;
@@ -237,6 +237,14 @@ span.ime-disable-shortcut {
 
 .imeselector-conkey { background: url('../images/conkey-inactive.png') no-repeat 50% 50%; }
 .imeselector-conkey.active { background: url('../images/conkey-active.png') no-repeat 50% 50%; }
+
+.imeselector-clipboard { background: url('../images/clipboard.png') no-repeat 50% 50%; }
+
+.imeselector-enter { background: url('../images/enter.png') no-repeat 50% 50%; }
+
+.imeselector-smiley { background: url('../images/smiley.png') no-repeat 50% 50%; }
+
+.imeselector-quotes { background: url('../images/quotes.png') no-repeat 50% 50%; }
 
 .imeselector-pinyin { background: url('../images/pinyin-inactive.png') no-repeat 50% 50%; }
 .imeselector-pinyin.active { background: url('../images/pinyin-active.png') no-repeat 50% 50%; }
