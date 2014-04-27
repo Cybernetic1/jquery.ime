@@ -63,16 +63,36 @@
 				$li = $( '<li><div class="word back"></div></li>' );
 				$li.appendTo( $ul )
 					.data( 'replacement', replacement )
+					.data( 'index', ":0" )
 					.data( 'id', parent );
 				$('.word', $li).html( '..' );
 			}
 
+			// Sort array first
+			conkey.selections.sort(function(a, b) {
+				var i_a = a['idx'],
+					i_b = b['idx'];
+				// console.log("comparing " + i_a + " vs " + i_b)
+
+				if ((i_a.charAt(0) == ':') && (i_b.charAt(0) == ':')) {
+					// console.log(i_b.slice(1) + " - " + i_a.slice(1) + " = " + result.toString());
+					return parseInt(i_a.slice(1)) - parseInt(i_b.slice(1));
+				}
+				else if (i_a[0] == ':')
+					return 1;
+				else if (i_b[0] == ':')
+					return -1;
+				else
+					return i_a.localeCompare(i_b);
+				});
+
 			// Fill data into selection menu
 			for ( i = 0; i < conkey.selections.length; i++ ) {
 				$li = $( '<li data-id=""><div class="word"></div></li>' );
-				$li.prependTo( $ul )
+				$li.appendTo( $ul )
 					.data( 'replacement', conkey.selections[i]['name'] )
 					.data( 'parent', conkey.selections[i]['parent'] )
+					.data( 'index', conkey.selections[i]['idx'] )
 					.attr( 'data-id', conkey.selections[i]['_id'] );
 
 				// Bind parent id to element
@@ -80,7 +100,12 @@
 						$li.data( 'parent', parent );
 
 				// Insert matched word to menu
-				$('.word', $li).html( conkey.selections[i]['name']);
+				$('.word', $li).html(
+					// strip the leading ':' in the index
+					(conkey.selections[i]['idx'].charAt(0) == ':' ?
+						conkey.selections[i]['idx'].slice(1) :
+						conkey.selections[i]['idx'])
+					+ ') ' + conkey.selections[i]['name']);
 
 				// Insert image to menu
 				// TODO: fetch proper image to menu
@@ -142,7 +167,7 @@
 					pos = val.length || 0,
 					// url = 'http://54.200.55.224:3000/dict/' + id + '/children'
 					url = 'http://localhost:3000/dict/' + id + '/children'
-					
+
 				if(replacement != null)
 					pos = val.lastIndexOf(replacement);
 
@@ -267,7 +292,7 @@
 		type: 'GET',
 		// url: 'http://54.200.55.224:3000/dict',
 		url: 'http://localhost:3000/dict',
-    dataType: 'json',
+		dataType: 'json',
 		success: function( data ) {
 			if(data.results.length)
 				conkey.rootNodes = data.results;
@@ -280,7 +305,7 @@
 }( jQuery ) );
 
 /*
- * jQuery.navigate - Allow any group of dom elements to be navigated with the keyboard arrows
+ * jQuery.navigate - Allow any group of dom elements to be navigated with keyboard arrows
  * Tom Moor, http://tommoor.com
  * Copyright (c) 2011 Tom Moor
  * MIT Licensed
@@ -452,7 +477,7 @@ function simplify(str) {
 }
 
 // ********* Hash table for traditional -> simplified chars *************
-// One tra
+// Each traditional char can have at most 1 simplification
 var h = new Object(); // or just {}
 h['啊']='啊';
 h['阿']='阿';
