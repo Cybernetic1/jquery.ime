@@ -136,7 +136,7 @@
 				// imeselector.triggerIME();
 				console.log("mouse over");
 				
-				this.triggerIME();
+				imeselector.toggle();
 				return false;
 			} );
 
@@ -150,7 +150,7 @@
 				// imeselector.triggerIME();
 				console.log("mouse out");
 
-				this.triggerIME();
+				imeselector.toggle();
 				return false;
 			} );
 
