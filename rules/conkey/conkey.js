@@ -280,7 +280,11 @@
 			// conkey.createMenu(this.$element);
 
 			// Replace input string and return
-			return input;
+			if (input == "z ") {
+				return "this is a test ";
+			}
+			else
+				return input;
 		}
 
 	};
