@@ -135,7 +135,8 @@
 				
 				// imeselector.triggerIME();
 				console.log("mouse over");
-
+				
+				this.triggerIME();
 				return false;
 			} );
 
@@ -149,13 +150,14 @@
 				// imeselector.triggerIME();
 				console.log("mouse out");
 
+				this.triggerIME();
 				return false;
 			} );
 
 
 			$('.imeselector-switcher', imeselector.$imeSetting).on( 'click.ime', function ( e ) {
-				var audio = new Audio("./sending.ogg");
-				audio.play();
+				// var audio = new Audio("./sending.ogg");
+				// audio.play();
 				console.log("mouse click");
 
 				var t = $( e.target );
