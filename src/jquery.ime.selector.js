@@ -132,17 +132,21 @@
 				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
 				// 	imeselector.toggle();
 				// }
-				
+
 				// imeselector.triggerIME();
 				console.log("mouse over");
 
-				// var ime = $( 'body' ).data( 'ime' );
-				var e = jQuery.Event("keydown");
+				//var e = jQuery.Event("keydown");
 
-				e.which = 17;  // ctrl key
-				this.$element.trigger(e);
-				
+				//e.which = 17;  // ctrl key
+				//this.$element.trigger(e);
+
 				// imeselector.toggle();
+				
+				ime = $('body').data( 'ime' );
+				if (!ime.inputmethod.isShowed())
+					ime.inputmethod.createMenu(ime.$element);
+					
 				return false;
 			} );
 
