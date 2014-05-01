@@ -37,8 +37,6 @@
 		 * Listen for events and bind to handlers
 		 */
 		listen: function ( element ) {
-			element.on( 'mouseover.ime', $.proxy( this.mouseover, this ) );
-			element.on( 'mouseoout.ime', $.proxy( this.mouseout, this ) );
 			element.on( 'keypress.ime', $.proxy( this.keypress, this ) );
 			element.on( 'keyup.ime', $.proxy( this.keyup, this ) );
 			element.on( 'keydown.ime', $.proxy( this.keydown, this ) );

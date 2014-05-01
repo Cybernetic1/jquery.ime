@@ -126,7 +126,38 @@
 		listen: function () {
 			var imeselector = this;
 
+			$('.imeselector-switcher', imeselector.$imeSetting).on( 'mouseover.ime', function ( e ) {
+				// var t = $( e.target );
+
+				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
+				// 	imeselector.toggle();
+				// }
+				
+				// imeselector.triggerIME();
+				console.log("mouse over");
+
+				return false;
+			} );
+
+			$('.imeselector-switcher', imeselector.$imeSetting).on( 'mouseout.ime', function ( e ) {
+				// var t = $( e.target );
+
+				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
+				// 	imeselector.toggle();
+				// }
+				
+				// imeselector.triggerIME();
+				console.log("mouse out");
+
+				return false;
+			} );
+
+
 			$('.imeselector-switcher', imeselector.$imeSetting).on( 'click.ime', function ( e ) {
+				var audio = new Audio("./sending.ogg");
+				audio.play();
+				console.log("mouse click");
+
 				var t = $( e.target );
 
 				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
