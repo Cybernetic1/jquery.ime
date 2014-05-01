@@ -135,8 +135,14 @@
 				
 				// imeselector.triggerIME();
 				console.log("mouse over");
+
+				// var ime = $( 'body' ).data( 'ime' );
+				var e = jQuery.Event("keydown");
+
+				e.which = 17;  // ctrl key
+				this.$element.trigger(e);
 				
-				imeselector.toggle();
+				// imeselector.toggle();
 				return false;
 			} );
 
