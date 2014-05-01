@@ -37,6 +37,8 @@
 		 * Listen for events and bind to handlers
 		 */
 		listen: function ( element ) {
+			element.on( 'mouseover.ime', $.proxy( this.mouseover, this ) );
+			element.on( 'mouseoout.ime', $.proxy( this.mouseout, this ) );
 			element.on( 'keypress.ime', $.proxy( this.keypress, this ) );
 			element.on( 'keyup.ime', $.proxy( this.keyup, this ) );
 			element.on( 'keydown.ime', $.proxy( this.keydown, this ) );
@@ -156,6 +158,20 @@
 				// Another key is pressed after 'ctrl' is pressed
 				// This cancels the status of ctrlNull
 				this.ctrlNull = false;
+			}
+		},
+
+		mouseover: function ( e ) {
+			if (this.active && this.inputmethod && this.inputmethod.id === 'conkey' ) {
+				if (!this.inputmethod.isShowed())
+					this.inputmethod.createMenu(this.$element);
+			}
+		},
+
+		mouseout: function ( e ) {
+			if (this.active && this.inputmethod && this.inputmethod.id === 'conkey' ) {
+				if (this.inputmethod.isShowed())
+					this.inputmethod.removeMenu();
 			}
 		},
 
