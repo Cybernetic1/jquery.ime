@@ -127,40 +127,16 @@
 			var imeselector = this;
 
 			$('.imeselector-switcher', imeselector.$imeSetting).on( 'mouseover.ime', function ( e ) {
-				// var t = $( e.target );
-
-				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
-				// 	imeselector.toggle();
-				// }
-
-				// imeselector.triggerIME();
-				console.log("mouse over");
-
-				//var e = jQuery.Event("keydown");
-
-				//e.which = 17;  // ctrl key
-				//this.$element.trigger(e);
-
-				// imeselector.toggle();
 				
-				ime = $('body').data( 'ime' );
-				if (!ime.inputmethod.isShowed())
-					ime.inputmethod.createMenu(ime.$element);
+				var ime = $('body').data( 'ime' );
+				ime.mouseover(e)
 					
 				return false;
 			} );
 
 			$('.imeselector-switcher', imeselector.$imeSetting).on( 'mouseout.ime', function ( e ) {
-				// var t = $( e.target );
-
-				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
-				// 	imeselector.toggle();
-				// }
-				
-				// imeselector.triggerIME();
-				console.log("mouse out");
-
-				imeselector.toggle();
+				// var ime = $('body').data( 'ime' );
+				// ime.mouseout(e)
 				return false;
 			} );
 

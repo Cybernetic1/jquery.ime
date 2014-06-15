@@ -500,7 +500,7 @@
 		if ((cmd == 'update' || cmd == 'remove') && typeof(data) != 'undefined') return 'Must enter id';
 		if (cmd == 'help') return "$.ime.cli(\"create\", {t:\"ABC\", parent: \"parent_id\"})\n\r";
 
-		var base = 'http://localhost:3000/dict'
+		var base = 'http://54.200.55.224:3000/dict'
 			, requests = {
 					create: {
 						url: base,
