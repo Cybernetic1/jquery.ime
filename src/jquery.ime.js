@@ -173,6 +173,15 @@
 			}
 		},
 
+		putText: function ( e, txt ) {
+			var $element = $( e.target );
+
+			var pos = this.getCaretPosition( $element );
+			console.log("got caret position");
+
+			return true;
+		},
+
 		/**
 		 * Keypress handler
 		 * @param {jQuery.Event} e Event

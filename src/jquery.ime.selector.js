@@ -55,7 +55,7 @@
 
 			this.$imeSetting.append( this.$menu );
 			$( 'body' ).append( this.$imeSetting );
-			
+
 			// Make element draggable
 			this.$imeSetting.drags();
 		},
@@ -127,10 +127,10 @@
 			var imeselector = this;
 
 			$('.imeselector-switcher', imeselector.$imeSetting).on( 'mouseover.ime', function ( e ) {
-				
+
 				var ime = $('body').data( 'ime' );
 				ime.mouseover(e)
-					
+
 				return false;
 			} );
 
@@ -151,7 +151,7 @@
 				// if ( t.hasClass( 'imeselector-toggle' ) && !t.data('mouseMoveEventFired')) {
 				// 	imeselector.toggle();
 				// }
-				
+
 				imeselector.triggerIME();
 
 				return false;
@@ -187,6 +187,9 @@
 			$('.imeselector-enter', imeselector.$imeSetting).on( 'click.enter', function ( e ) {
 				var audio = new Audio("./sending.ogg");
 				audio.play();
+
+				var ime = $( 'body' ).data( 'ime' );
+				ime.putText( e, "Testing" );
 
 				// imeselector.triggerIME();
 				return false;
@@ -268,7 +271,7 @@
 
 			imeselector.$element.on( 'focus.ime', function ( e ) {
 				ime = $( 'body' ).data( 'ime' );
-				
+
 				imeselector.selectLanguage( imeselector.decideLanguage() );
 				imeselector.$element = $( e.target );
 
@@ -517,7 +520,7 @@
 			this.$menu.find( '.ime-checked' ).removeClass( 'ime-checked' );
 			this.$menu.find( 'li[data-ime-inputmethod=' + inputmethodId + ']' )
 				.addClass( 'ime-checked' );
-			
+
 			ime = this.$element.data( 'ime' );
 
 			if ( inputmethodId === 'system' ) {
@@ -705,7 +708,7 @@
 				$( 'body' ).data( 'imeselector', imeselector );
 				$this.data( 'imeselector', imeselector );
 			}
-			
+
 			if ( !data ) {
 				if( ime != null )
 					ime.$element = $this;
@@ -836,7 +839,7 @@
 
 (function($) {
     $.fn.drags = function(opt) {
-	
+
         opt = $.extend({handle:"",cursor:"move"}, opt);
 
         if(opt.handle === "") {
@@ -846,7 +849,7 @@
         }
 
         return $el.css('cursor', opt.cursor).on("mousedown", function(e) {
-						
+
             if(opt.handle === "") {
                 var $drag = $(this).addClass('draggable');
             } else {
@@ -858,7 +861,7 @@
                 pos_y = $drag.offset().top + drg_h - e.pageY,
                 pos_x = $drag.offset().left + drg_w - e.pageX;
             $drag.css('z-index', 1000).parents().on("mousemove", function(e) {
-				
+
                 $('.draggable').offset({
                     top:e.pageY + pos_y - drg_h,
                     left:e.pageX + pos_x - drg_w
@@ -867,10 +870,10 @@
                 });
             });
             e.preventDefault(); // disable selection
-			
+
         }).on("mouseup", function(e) {
-		
-			
+
+
             if(opt.handle === "") {
                 $(this).removeClass('draggable');
             } else {
