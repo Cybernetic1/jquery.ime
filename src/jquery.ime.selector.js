@@ -189,7 +189,7 @@
 				audio.play();
 
 				var ime = $( 'body' ).data( 'ime' );
-				ime.putText( e, "Testing" );
+				ime.putText('Testing');
 
 				// imeselector.triggerIME();
 				return false;

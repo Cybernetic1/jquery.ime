@@ -50,7 +50,7 @@
 		 */
 		addElement: function ( element ) {
 			var $element = $( element );
-
+			this.$elements.push($element);
 			this.selector = $element.imeselector( this.options );
 			this.listen( $element );
 		},
@@ -173,11 +173,18 @@
 			}
 		},
 
-		putText: function ( e, txt ) {
-			var $element = $( e.target );
+		putText: function ( txt ) {
+			var $element
+
+			for(var i in this.$elements) {
+				if(this.$elements[i].is(':focus')) {
+					$element = this.$elements[i];
+					break;
+				}
+			}
 
 			var pos = this.getCaretPosition( $element );
-			console.log("got caret position");
+			console.log("got caret position", pos);
 
 			return true;
 		},
@@ -312,9 +319,9 @@
 		 */
 		destroy: function () {
 			$( 'body' ).off( '.ime' );
-			this.$elements.each(function() {
-				$(this).off( '.ime' ).removeData( 'ime' ).removeData( 'imeselector' );
-			});
+			for(var i in this.$elements) {
+				this.$elements[i].off( '.ime' ).removeData( 'ime' ).removeData( 'imeselector' );
+			}
 		},
 
 		/**
