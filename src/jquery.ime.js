@@ -49,8 +49,10 @@
 		 * Add element to IME
 		 */
 		addElement: function ( element ) {
-			var $element = $( element );
+			var $element = $( element );		// select the HTML element on web page
 			this.$elements.push($element);
+			// $element = an HTML element of web page
+			// initialize ime.selector
 			this.selector = $element.imeselector( this.options );
 			this.listen( $element );
 		},
@@ -174,8 +176,9 @@
 		},
 
 		putText: function ( txt ) {
-			var $element
+			var $element;
 
+			// find element in focus
 			for(var i in this.$elements) {
 				if(this.$elements[i].is(':focus')) {
 					$element = this.$elements[i];
@@ -184,7 +187,28 @@
 			}
 
 			var pos = this.getCaretPosition( $element );
-			console.log("got caret position", pos);
+
+			replaceText( $element, txt, pos[0], pos[1] );
+
+			return true;
+		},
+
+		wrapQuotes: function () {
+			var $element;
+
+			// find element in focus
+			for(var i in this.$elements) {
+				if(this.$elements[i].is(':focus')) {
+					$element = this.$elements[i];
+					break;
+				}
+			}
+
+			var pos = this.getCaretPosition( $element );
+			// console.log("got caret position", pos);
+
+			replaceText( $element, '「', 0, 0 );
+			replaceText( $element, '」', pos[0]+1, pos[1]+1 );
 
 			return true;
 		},
@@ -421,6 +445,10 @@
 		 */
 		setCaretPosition: function ( $element, position ) {
 			return setCaretPosition( $element, position );
+		},
+
+		setDivCaretPosition: function ( $element, position ) {
+			return setDivCaretPosition( $element, position );
 		},
 
 		/**

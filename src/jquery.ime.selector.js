@@ -179,8 +179,35 @@
 			});
 
 			$('.imeselector-clipboard', imeselector.$imeSetting).on( 'click.clipboard', function ( e ) {
-				// imeselector.triggerIME();
+				// this does not work:
+				clipboardholder = document.getElementById("clipboardholder");
+				clipboardholder.value = "stuff";
+				clipboardholder.select();
+				document.execCommand("Copy");
+				console.log("copied to clipboard: " + request.clipboard);
 
+				return false;
+			});
+
+			$('.imeselector-smiley', imeselector.$imeSetting).on( 'click.smiley', function ( e ) {
+				var audio = new Audio("./sending.ogg");
+				audio.play();
+
+				var ime = $( 'body' ).data( 'ime' );
+				ime.putText(' :)');
+
+				// imeselector.triggerIME();
+				return false;
+			});
+
+			$('.imeselector-quotes', imeselector.$imeSetting).on( 'click.quotes', function ( e ) {
+				var audio = new Audio("./sending.ogg");
+				audio.play();
+
+				var ime = $( 'body' ).data( 'ime' );
+				ime.wrapQuotes();
+
+				// imeselector.triggerIME();
 				return false;
 			});
 
@@ -189,7 +216,7 @@
 				audio.play();
 
 				var ime = $( 'body' ).data( 'ime' );
-				ime.putText('Testing');
+				ime.putText('<Enter>');
 
 				// imeselector.triggerIME();
 				return false;
